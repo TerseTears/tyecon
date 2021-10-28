@@ -10,24 +10,37 @@ get_interface_args <- function(arguments, interface){
     return(interface_args)
 }
 
+# functions to get lhs and rhs of quosures with formula structure
+f_lhs_quo <- function(quosure){
+    quo_set_expr(quosure, f_lhs(quo_get_expr(quosure)))
+}
+f_rhs_func <- function(quosure){
+    rlang::as_function(new_formula(NULL, f_rhs(quo_get_expr(quosure))))
+}
+
 # TODO currently, doesn't support extra arguments that are to be ignored for 
 # irrelevant functions
 yeksar <- function(...){
     dots <- enquos0(...)
+    func_specs <- map(dots[-1], f_lhs_quo)
+    post_funcs <- map(dots[-1], f_rhs_func)
 
     # functions to yeksar start from second argument
-    function_names <- map(dots[-1], call_name)
+    func_names <- map(func_specs, call_name)
 
     # transformation instructions are directly given as named arguments for 
     # each function
-    function_args_transforms <- map(dots[-1], call_args)
-    names(function_args_transforms) <- function_names
+    func_args_transforms <- map(func_specs, call_args)
+
+    # name components to access them with the interface argument
+    names(func_args_transforms) <- func_names
+    names(post_funcs) <- func_names
 
     # add function args as ones specified as first argument, plus an interface
     # argument, and whether to return produced function (for debugging) or
     # evaluate in place
     yeksar_func_args <- c(call_args(dots[[1]]), 
-                          list(interface=function_names[[1]], evaluate=TRUE), 
+                          list(interface=func_names[[1]], evaluate=TRUE), 
                                pairlist2(...=))
 
     # TODO fix needing to use quote instead of rlang functions, resulting from
@@ -37,13 +50,12 @@ yeksar <- function(...){
     # I splice the first part, keeping second part and adding to 
     # function_args_transforms
     yeksar_func_body <- quote({
-        function_to_call <- 
-            call2(interface, !!!function_args_transforms[[interface]], 
+        func_to_call <- 
+            call2(interface, !!!func_args_transforms[[interface]], 
                   !!!get_interface_args(list2(...), interface));
         if (evaluate==TRUE){
-            # TODO this needs to be eval_tidy. check if anything breaks then
-            eval(function_to_call)}
-        else return(function_to_call)})
+            post_funcs[[interface]](eval_tidy(func_to_call))}
+        else return(func_to_call)})
 
     retfunc <- new_function(yeksar_func_args, yeksar_func_body)
 
