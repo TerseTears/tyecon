@@ -13,6 +13,15 @@ test_that("functions with differently named arguments work", {
               expect_equal(yeksared(9,5), bar(5,9))
 })
 
+test_that("functions with same argument names work", {
+              foo <- function(a, b) { a/b }
+              bar <- function(b, a) { a/b }
+              yeksared <- yeksar(..(a = , b = ),
+                                 foo(a = a, b = b) ~ .,
+                                 bar(b = b, a = a) ~ .)
+              expect_equal(yeksared(9,5), bar(5,9))
+})
+
 test_that("interface switching works", {
               foo <- function(a1, b1) { a1/b1 }
               # multiply by 2 so that foo gives smaller values
@@ -93,13 +102,6 @@ test_that("quoting function works", {
               expect_equal(yeksared(testdf, "y"), bar(testdf, "y"))
 })
 
-test_that("quasi-quoting function works", {
-})
-
-test_that("quasi-quoting post-processing functions work", {
-  expect_equal(2 * 2, 4)
-})
-
 test_that("parameters in post-processing functions work", {
               foo <- function(a1, b1) { a1/b1 }
               bar <- function(b2, a2) { a2/b2 }
@@ -110,9 +112,56 @@ test_that("parameters in post-processing functions work", {
               expect_equal(yeksared(9,5), bar(5,9)*multfactor)
 })
 
+test_that("supplied default arguments work", {
+              foo <- function(a1, b1) { a1/b1 }
+              bar <- function(b2, a2) { a2/b2 }
+              bval <- 2
+              yeksared <- yeksar(..(..a = 3, ..b = bval),
+                                 foo(a1 = ..a, b1 = 2) ~ .,
+                                 bar(b2 = bval, a2 = ..a) ~ .)
+              expect_equal(yeksared(9,4), yeksared(9,7,interface="bar"))
+              expect_equal(yeksared(), bar(bval, 3))
+})
+
 # TODO testing for conditions to throw errors
 
-test_that("unknown optional argument is error", {
-  expect_equal(2 * 2, 4)
+test_that("unknown optional argument is printed nicely", {
+              foo <- function(a1, b1, simplify=TRUE) { a1/b1 }
+              bar <- function(b2, a2) { a2/b2 }
+              yeksared <- yeksar(..(..a = , ..b = ),
+                                 foo(a1 = ..a, b1 = ..b) ~ .,
+                                 bar(b2 = ..b, a2 = ..a) ~ .)
+              expect_error(yeksared(9,5,foo.smplfy=TRUE), "unused argument")
+              expect_equal(yeksared(9,5,foo.simplify=TRUE), bar(5,9))
+})
+
+test_that("supplying other than two-sided formulas is error", {
+              foo <- function(a1, b1) { a1/b1 }
+              bar <- function(b2, a2) { a2/b2 }
+              expect_error(yeksar(..(..a = , ..b = ),
+                                 foo(a1 = ..a, b1 = ..b),
+                                 bar(b2 = ..b, a2 = ..a) ~ .), "formula")
+})
+
+test_that("supplying unifying interface other than ..(a=,b=) is error", {
+              foo <- function(a1, b1) { a1/b1 }
+              bar <- function(b2, a2) { a2/b2 }
+              expect_error(yeksar(foobar(..a = , ..b = ),
+                                 foo(a1 = ..a, b1 = ..b) ~ .,
+                                 bar(b2 = ..b, a2 = ..a) ~ .), "call")
+              expect_error(yeksar({a; b},
+                                 foo(a1 = ..a, b1 = ..b) ~ .,
+                                 bar(b2 = ..b, a2 = ..a) ~ .), "call")
+})
+
+test_that("supplying unifying interface arguments without = is error", {
+              foo <- function(a1, b1) { a1/b1 }
+              bar <- function(b2, a2) { a2/b2 }
+              expect_error(yeksar(..(..a, ..b = ),
+                                 foo(a1 = ..a, b1 = ..b) ~ .,
+                                 bar(b2 = ..b, a2 = ..a) ~ .), "=")
+              expect_error(yeksar(..(..a, ..b),
+                                 foo(a1 = ..a, b1 = ..b) ~ .,
+                                 bar(b2 = ..b, a2 = ..a) ~ .), "=")
 })
 
