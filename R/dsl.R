@@ -15,7 +15,9 @@ f_lhs_quo <- function(quosure){
     quo_set_expr(quosure, f_lhs(quo_get_expr(quosure)))
 }
 f_rhs_func <- function(quosure){
-    rlang::as_function(new_formula(NULL, f_rhs(quo_get_expr(quosure))))
+    func <- rlang::as_function(new_formula(NULL, f_rhs(quo_get_expr(quosure))))
+    fn_env(func) <- quo_get_env(quosure)
+    return(func)
 }
 
 # TODO currently, doesn't support extra arguments that are to be ignored for 
@@ -51,10 +53,13 @@ yeksar <- function(...){
     # function_args_transforms
     yeksar_func_body <- quote({
         func_to_call <- 
-            call2(interface, !!!func_args_transforms[[interface]], 
+            call2(interface, !!!func_args_transforms[[interface]],
                   !!!get_interface_args(list2(...), interface));
+        # TODO make the func_specs[[1]] more readable
         if (evaluate==TRUE){
-            post_funcs[[interface]](eval_tidy(func_to_call))}
+            post_funcs[[interface]](eval_tidy(func_to_call,
+             env = env_clone(quo_get_env(func_specs[[1]]),
+                             parent = current_env())))}
         else return(func_to_call)})
 
     retfunc <- new_function(yeksar_func_args, yeksar_func_body)
