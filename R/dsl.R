@@ -6,7 +6,7 @@ get_interface_args <- function(arguments, interface){
     interface_args <- 
         arguments[str_detect(names(arguments), paste0("^", interface, "\\."))]
     names(interface_args) <- 
-        str_extract(names(interface_args), paste0("(?<=", interface, "\\.)."))
+        str_extract(names(interface_args), paste0("(?<=", interface, "\\.).*"))
     return(interface_args)
 }
 
@@ -24,6 +24,17 @@ f_rhs_func <- function(quosure){
 # irrelevant functions
 yeksar <- function(...){
     dots <- enquos0(...)
+    if (!all(map_lgl(dots[-1], ~is_formula(quo_get_expr(.))))) {
+        abort("specification needs to be in formula form")
+    }
+    if(!is_call(quo_get_expr(dots[[1]]), c(".", ".."))) {
+        abort("unified interface specification not a call, 
+              or not one to . or .. (required for consistency)")
+    }
+    if(!is_named(call_args(quo_get_expr(dots[[1]])))) {
+        abort("unified interface specification must contain = for args,
+              if no default is required, leave RHS empty")
+    }
     func_specs <- map(dots[-1], f_lhs_quo)
     post_funcs <- map(dots[-1], f_rhs_func)
 
