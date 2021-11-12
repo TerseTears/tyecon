@@ -77,3 +77,23 @@ yeksar <- function(...){
 
     return(retfunc)
 }
+
+# TODO should also work with map and multiple data
+# function to pass object to multiple lines of code and return results together
+`%to%` <- function(obj, blocks) {
+    blocks <- enquo0(blocks)
+    if(!isTRUE(all.equal(quo_get_expr(blocks)[1], expr({})))) {
+        abort("expressions need to be in a code block")
+    }
+    if (!all(map_lgl(quo_get_expr(blocks)[-1], is_formula))) {
+        abort("expressions needs to be in formula form")
+    }
+    blocks <- map(quo_get_expr(blocks)[-1], ~
+                  new_quosure(., quo_get_env(blocks)))
+    resnames <- map(blocks, ~ as_string(f_lhs(quo_get_expr(.))))
+    funcs <- map(blocks, f_rhs_func)
+    reslist <- map(set_names(funcs, resnames), ~.(obj))
+    # TODO currently, can't have unnamed list element name if to use 
+    # map_dfr, hence .=.
+    map_dfr(reslist, ~ if(length(.)==1) . else list(.=.))
+}
