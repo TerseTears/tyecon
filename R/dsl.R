@@ -36,6 +36,7 @@ yeksar <- function(...){
               if no default is required, leave RHS empty")
     }
     func_specs <- map(dots[-1], f_lhs_quo)
+    func_envs <- quo_get_env(func_specs[[1]])
     post_funcs <- map(dots[-1], f_rhs_func)
 
     # functions to yeksar start from second argument
@@ -69,13 +70,56 @@ yeksar <- function(...){
         # TODO make the func_specs[[1]] more readable
         if (evaluate==TRUE){
             post_funcs[[interface]](eval_tidy(func_to_call,
-             env = env_clone(quo_get_env(func_specs[[1]]),
-                             parent = current_env())))}
+             env = env_clone(func_envs, parent = current_env())))}
         else return(func_to_call)})
 
     retfunc <- new_function(yeksar_func_args, yeksar_func_body)
+    class(retfunc) <- c("yeksar", "function")
 
     return(retfunc)
+}
+
+`+.yeksar` <- function(e1, e2) {
+    if ("yeksar" %in% class(e1)) {
+        yeksar_func <- e1
+        func_quo <- enquo(e2)
+    }
+    else {
+        yeksar_func <- e2
+        func_quo <- enquo(e1)
+    }
+    # TODO instead refactor the first part of yeksar e.g.func_specify$func_specs
+    # TODO in below, enforce only parentheses and no brackets or braces
+    # remove parentheses
+    func_quo <- quo_set_expr(func_quo, quo_get_expr(func_quo)[[2]])
+
+    if (!is_formula(quo_get_expr(func_quo))) {
+        abort("specification needs to be in formula form")
+    }
+    func_spec <- f_lhs_quo(func_quo)
+    func_env <- quo_get_env(func_spec)
+    # wrap in list since can't assign names to singletons otherwise
+    post_func <- list(f_rhs_func(func_quo))
+    func_args_transform <- list(call_args(func_spec))
+    func_name <- call_name(func_spec)
+
+    names(func_args_transform) <- func_name
+    names(post_func) <- func_name
+
+    # TODO below could be written shorter
+    # it is essential to clone the environment otherwise is inherited
+    yeksar_env <- env_clone(fn_env(yeksar_func))
+    func_args_transforms <- c(env_get(yeksar_env, "func_args_transforms"),
+                              func_args_transform)
+    func_envs <- env_clone(func_env, parent = env_get(yeksar_env, "func_envs"))
+    post_funcs <- c(env_get(yeksar_func, "post_funcs"), post_func)
+
+    env_bind(yeksar_env, func_args_transforms = func_args_transforms,
+             func_envs = func_envs, post_funcs = post_funcs)
+
+    fn_env(yeksar_func) <- yeksar_env
+
+    return(yeksar_func)
 }
 
 # TODO should also work with map and multiple data
