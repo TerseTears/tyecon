@@ -20,6 +20,15 @@ f_rhs_func <- function(quosure){
     return(func)
 }
 
+pretty_func_args <- function(func) {
+    arg_names <- fn_fmls_names(func)
+    arg_names <- c(arg_names[1:(length(arg_names)-2)], "interface.arg")
+    arg_vals <- fn_fmls(func)
+    arg_vals <- c(arg_vals[1:(length(arg_vals)-2)], "")
+
+    paste(arg_names, "=", arg_vals)
+}
+
 # TODO currently, doesn't support extra arguments that are to be ignored for 
 # irrelevant functions
 yeksar <- function(...){
@@ -115,6 +124,19 @@ yeksar <- function(...){
     fn_env(yeksar_func) <- yeksar_env
 
     return(yeksar_func)
+}
+
+print.yeksar <- function(yeksar_func) {
+    func_args_transforms <- env_get(fn_env(yeksar_func), "func_args_transforms")
+    func_names <- names(func_args_transforms)
+
+    header <- paste("yeksar function with", length(func_names), "interfaces")
+    interfaces <- paste(" ", "\033[1minterfaces:\033[22m", 
+                        paste(func_names, "()", sep="", collapse=", "))
+    arguments <- paste(" ", "\033[1margs:\033[22m", 
+                       paste(pretty_func_args(yeksar_func), collapse="\n\t"))
+
+    cat(header, interfaces, arguments, sep="\n")
 }
 
 # TODO should also work with map and multiple data
