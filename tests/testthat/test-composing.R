@@ -1,8 +1,5 @@
 rm(list=ls())
-library(tidyverse)
-library(rlang)
 library(testthat)
-source("../../R/dsl.R")
 
 test_that("functions with differently named arguments work", {
               foo <- function(a1, b1) { a1/b1 }
@@ -91,11 +88,11 @@ test_that("optional argument with no function prefix is ignored", {
 })
 
 test_that("quoting function works", {
-              testdf <- tribble(~x, ~y,
+              testdf <- tibble::tribble(~x, ~y,
                                 1, 5,
                                 4, 3)
               foo <- function(df, col) {
-                  col <- as_string(ensym(col))
+                  col <- rlang::as_string(rlang::ensym(col))
                   sum(df[[col]]) }
               bar <- function(df, colstring) { sum(df[[colstring]]) }
               yeksared <- yeksar(..(..df = , ..col = ),
