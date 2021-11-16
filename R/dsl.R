@@ -80,14 +80,9 @@ yeksar <- function(...){
 }
 
 `+.yeksar` <- function(e1, e2) {
-    if ("yeksar" %in% class(e1)) {
-        yeksar_func <- e1
-        func_quo <- enquo(e2)
-    }
-    else {
-        yeksar_func <- e2
-        func_quo <- enquo(e1)
-    }
+    yeksar_func <- e1
+    func_quo <- enquo0(e2)
+
     # TODO instead refactor the first part of yeksar e.g.func_specify$func_specs
     # TODO in below, enforce only parentheses and no brackets or braces
     # remove parentheses
@@ -112,7 +107,7 @@ yeksar <- function(...){
     func_args_transforms <- c(env_get(yeksar_env, "func_args_transforms"),
                               func_args_transform)
     func_envs <- env_clone(func_env, parent = env_get(yeksar_env, "func_envs"))
-    post_funcs <- c(env_get(yeksar_func, "post_funcs"), post_func)
+    post_funcs <- c(env_get(yeksar_env, "post_funcs"), post_func)
 
     env_bind(yeksar_env, func_args_transforms = func_args_transforms,
              func_envs = func_envs, post_funcs = post_funcs)
