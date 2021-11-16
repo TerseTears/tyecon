@@ -1,0 +1,237 @@
+---
+title: "example-issues"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{example-issues}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+rm(list = ls())
+#library(tyecon)
+library(tidyverse)
+library(rlang)
+library(lobstr)
+library(crayon)
+```
+
+Example of different function interfaces doing the same thing and what dsl would simplify this issue.
+
+The two functions each take a different data type in, produce a different out data, use different name for trim argument, one does not have a default value for column (works only on).
+
+```{r example-funcs}
+basemeancalc <- function(listdata, trimmed = 0.0, na.rm = T){
+    mean(listdata, trim = trimmed, na.rm = na.rm)
+}
+
+tidymeancalc <- function(tibbledata, column, trimend = 0.0, trimstart = 0.0){
+    column <- as_string(ensym(column))
+    colvector <- tibbledata[[column]] %>% sort %>% na.omit
+    nelem <- length(colvector)
+    colvector <- colvector[floor(nelem*trimstart) + 1 : nelem - floor(nelem*trimend)]
+    return(mean(colvector))
+}
+
+mydf <- tribble(~x, ~y,
+                1, 5,
+                4, 3,
+                6, 2,
+                17, 4,
+                8, 12,
+                14, 16,
+                21, 72,
+                19, 32,
+                10, 15,
+                NA, NA)
+
+tidymeancalc(mydf, x, trimend = 0.1, trimstart = 0.1)
+basemeancalc(mydf$x, trimmed = 0.1)
+mean(mydf$x, trim = 0.1, na.rm = T)
+```
+
+Three vastly different apis. Now, for unification:
+
+
+```{r source}
+source("../R/dsl.R")
+```
+
+```{r}
+mypower <- 1
+
+(myexp <- yeksar(..(..tibble =, ..column =, ..trim =), 
+       basemeancalc(listdata = ..tibble[[..column]], trimmed = ..trim) ~ .^mypower+9,
+       tidymeancalc(tibbledata = ..tibble, column = !!..column, trimend = ..trim, 
+                    trimstart = ..trim) ~ .x^2+4))
+
+myexp(mydf, "x", 0.1, evaluate=TRUE, basemeancalc.na.rm=T, tidymeancalc.smth=F)
+
+myexp(mydf, "x", 0.1, interface="tidymeancalc",
+      evaluate=TRUE, smth=2)
+
+myfunc <- function(x) x^2
+smth <- myexp + (mean(x = ..tibble[[..column]], trimmed = ..trim) ~ mean)
+
+smth(mydf, "x", 0.1, interface="mean", mean.na.rm=T)
+
+(mean(x = ..tibble[[..column]], trimmed = ..trim) ~ .) + myexp +
+    (mean(x = ..tibble[[..column]], trimmed = ..trim) ~ .)
+
+fn_env(smth) %>% env_print
+
+env_get(fn_env(smth), "func_args_transforms")
+
+
+quo_get_expr(quo((mean(x) ~ .)))[[2]] 
+
+fn_env(myexp) %>% env_print
+
+env_get(fn_env(myexp), "func_envs", inherit = TRUE) %>% env_print
+```
+TODO it is more rational to first substitute the arguments supplied here, inside of some function, and then just get the generated call with these values, otherwise, below, which uses quoting from the get-go, won't work.
+
+```{r}
+myexp(mydf, "x", 0.1, interface = "tidymeancalc")
+
+quo({new_function(yeksar_func_args,
+                     call2(interface, function_args_transforms[[interface]]));
+       })
+
+expr(smth) == quote(smth)
+
+(mylist <- exprs(x, y, z))
+
+quote(myfunc(expr(!!!mylist)))
+```
+
+TODO can't change no na.rm though since it's hard-coded...
+
+The goal is to specify a dsl by which the package author can convert its functions to a unified interface by only specifying some general rules (in a text file bundled with the package for instance).
+
+```{r}
+getcol <- function(df, col){
+    col <- as_string(ensym(col))
+    #col <- enquo(col)
+    df[[col]]
+}
+
+getcol(mydf, x)
+
+somefunc <- function(...){
+    a <- list2(...)
+    a
+}
+
+somefunc()
+
+(smth <- somefunc(tidymeancalc.xyz=10,a.yzx=2, tidymeancalc.zyx=5))
+
+chosen <- smth[str_detect(names(smth), "^a.")]
+
+names(chosen) <- str_extract(names(chosen), "(?<=a\\.).")
+
+chosen
+
+get_interface_args(smth, "tidymeancalc")
+
+a <- list(b=2,c=3)
+b <- list(d=5, e=9)
+call2("smth", !!!a, !!!b)
+
+c(2, if (TRUE) 5)
+```
+
+```{r}
+rlang::as_function(new_formula(NULL, f_rhs(expr(mean(c(2,3)) ~ .x^2 + 4))))
+
+new_formula(NULL, quo(.x^2 + 4))
+
+f_lhs_quo <- function(quosure){
+    quo_set_expr(quosure, f_lhs(quo_get_expr(quosure)))
+}
+
+myquo <- quo(mean(2,3) ~ .x^2)
+
+f_lhs_quo(myquo)
+
+expr(smth -> b) %>% call_args
+
+##
+
+expr(..(a, b))
+
+## some sort of let directive
+
+myfunc <- mean
+mystring <- "smth"
+
+a <- quo({
+    meanval ~ mean[[.]]
+    sdval ~ sd[[.]]
+})
+```
+
+```{r}
+
+expr({sdfsd; asdfadf}) == expr({})
+
+expr({sdfsd; asdfadf}) %>% length()
+
+
+if(isTRUE(all.equal(expr({sdfsd; asdfadf}), expr({})))) print("hello")
+
+
+map(a[-1], f_rhs)
+```
+
+
+```{r`}
+modelfit <- lm(y ~ x, data = mydf)
+
+(a <- summary(modelfit) %to% {
+    rsquared ~ .$r.squared
+    adjrsquared ~ .$adj.r.squared
+    residuals ~ .$residuals
+    pval ~ coef(.)[,"Pr(>|t|)"]
+    termsof ~ .$terms
+    callof ~ .$call
+}) #%>% nest(data=residuals)
+
+a$residuals
+
+a$pval
+
+a$termsof
+
+a$callof
+
+list(c(1,2,3))
+
+library(broom)
+
+tidy(modelfit)
+
+(a <- tribble(~x, ~dfdata,
+        1, tribble(~z,~y,
+                   1, 2,
+                   3, 4,)))
+
+a$dfdata
+
+(a <- tribble(~x, ~y, ~z,
+        1, 9, 5,
+        2, 7, 3))
+
+(b <- nest(a, data=c(y,z)))
+
+b$data
+```
+
