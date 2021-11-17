@@ -83,6 +83,8 @@ pretty_func_args <- function(func) {
 #' argument is useful for debugging purposes. Extra arguments can be passed in 
 #' the format `interface.arg`.
 #'
+#' @example examples/examples-yeksar.R
+#'
 #' @export
 yeksar <- function(...){
     dots <- rlang::enquos0(...)
@@ -234,6 +236,8 @@ print.yeksar <- function(x, ...) {
 
 #' @return Dataframe with column names being the formula LHS values, and a
 #' single row containing the results of each column's respective instructions.
+#'
+#' @example examples/examples-to-operator.R
 #'
 #' @export
 #' @rdname to-operator
