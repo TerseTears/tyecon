@@ -256,7 +256,13 @@ print.yeksar <- function(x, ...) {
                                          rlang::f_lhs(rlang::quo_get_expr(.))))
     funcs <- purrr::map(blocks, f_rhs_func)
     reslist <- purrr::map(rlang::set_names(funcs, resnames), ~.(obj))
-    # TODO currently, can't have unnamed list element name if to use 
-    # map_dfr, hence .=.
-    purrr::map_dfr(reslist, ~ if(length(.)==1) . else list(.=.))
+    # make non-singleton elements a list to use in dataframe
+    reslist <- purrr::map(reslist, ~ if(length(.)==1) . else I(list(.)))
+
+    if (requireNamespace("tibble", quietly = TRUE)) {
+        tibble::as_tibble(reslist)
+    }
+    else {
+        as.data.frame(reslist)
+    }
 }
