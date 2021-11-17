@@ -17,9 +17,12 @@ RoxygenNote: 7.1.1
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tibble
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Imports: 
+    stringr,
+    dplyr,
     purrr,
     rlang

@@ -16,11 +16,11 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 rm(list = ls())
-#library(tyecon)
-library(tidyverse)
+library(tyecon)
 library(rlang)
-library(lobstr)
-library(crayon)
+library(purrr)
+library(stringr)
+library(tibble)
 ```
 
 Example of different function interfaces doing the same thing and what dsl would simplify this issue.

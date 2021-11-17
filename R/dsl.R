@@ -190,15 +190,16 @@ yeksar <- function(...){
 }
 
 #' @export
-print.yeksar <- function(yeksar_func) {
-    func_args_transforms <- env_get(fn_env(yeksar_func), "func_args_transforms")
+print.yeksar <- function(x, ...) {
+    func_args_transforms <- rlang::env_get(rlang::fn_env(x),
+                                           "func_args_transforms")
     func_names <- names(func_args_transforms)
 
     header <- paste("yeksar function with", length(func_names), "interfaces")
     interfaces <- paste(" ", "\033[1minterfaces:\033[22m", 
                         paste(func_names, "()", sep="", collapse=", "))
     arguments <- paste(" ", "\033[1margs:\033[22m", 
-                       paste(pretty_func_args(yeksar_func), collapse="\n\t"))
+                       paste(pretty_func_args(x), collapse="\n\t"))
 
     cat(header, interfaces, arguments, sep="\n")
 }
