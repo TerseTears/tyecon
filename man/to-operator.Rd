@@ -52,7 +52,6 @@ testvec \%to\% {
 }
 
 # vector results are stored as lists in the dataframe
-
 testvec \%to\% {
     itself ~ .
     itsmean ~ mean(.)
