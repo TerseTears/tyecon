@@ -14,9 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Setup
-
-```{r setup}
+```{r setup, include = FALSE}
 rm(list = ls())
 library(tyecon)
 library(rlang)

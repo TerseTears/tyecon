@@ -1,9 +1,9 @@
 Package: tyecon
-Title: A package to make assembling functions and results easier
+Title: Assemble functions and results with ease
 Version: 0.1.0
 Authors@R: 
-    person(given = "Mohammad Ali",
-           family = "Mohammadi",
+    person(given = "TerseTears",
+           family = "",
            role = c("aut", "cre"),
            email = "TerseTears@protonmail.com")
 Description: The package allows one to unify different functions under a desired
