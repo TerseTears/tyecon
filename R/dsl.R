@@ -26,7 +26,8 @@ pretty_func_args <- function(func) {
     arg_names <- c(arg_names[1:(length(arg_names)-2)], "interface.arg")
     arg_vals <- rlang::fn_fmls(func)
     arg_vals <- c(arg_vals[1:(length(arg_vals)-2)], "")
-    paste(arg_names, "=", arg_vals)
+    arg_vals <- purrr::map_chr(arg_vals, ~ if(.=="") "" else paste(" =", .))
+    paste0(arg_names, arg_vals)
 }
 
 #' Unify functions interfaces
@@ -198,10 +199,10 @@ print.yeksar <- function(x, ...) {
     func_names <- names(func_args_transforms)
 
     header <- paste("yeksar function with", length(func_names), "interfaces")
-    interfaces <- paste(" ", "\033[1minterfaces:\033[22m", 
+    interfaces <- paste(" ", "interfaces:", 
                         paste(func_names, "()", sep="", collapse=", "))
-    arguments <- paste(" ", "\033[1margs:\033[22m", 
-                       paste(pretty_func_args(x), collapse="\n\t"))
+    arguments <- paste(" ", "args:", 
+                       paste(pretty_func_args(x), collapse=", "))
 
     cat(header, interfaces, arguments, sep="\n")
 }
