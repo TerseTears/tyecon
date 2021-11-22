@@ -32,7 +32,7 @@ pretty_func_args <- function(func) {
 
 #' Unify functions interfaces
 #'
-#' `yeksar` unifies functions along a single specification using
+#' `convoke` unifies functions along a single specification using
 #' statements on function argument transformations that would be needed. The
 #' result is a single function whose *interface* can be changed simply by
 #' changing the respective argument in the generated function.
@@ -66,28 +66,28 @@ pretty_func_args <- function(func) {
 #'
 #' # Composing functions
 #'
-#' It is also possible to progressively add functions to a yeksar function
-#' simply by adding to the yeksar function the new specifications:
+#' It is also possible to progressively add functions to a convoke function
+#' simply by adding to the convoke function the new specifications:
 #' ```
-#' yeksar_func + (func_spec ~ postfunc)
+#' convoke_func + (func_spec ~ postfunc)
 #' ```
 #'
 #' @param ... First element is the desired unifying interface. Remaining
 #' elements are all the various specifications for function argument
 #' transformations.
 #'
-#' @return Function with additional class *yeksar* with arguments being
+#' @return Function with additional class *convoke* with arguments being
 #' ```
-#' yeksar_func(specified_args, interface, evaluate = TRUE, ...)
+#' convoke_func(specified_args, interface, evaluate = TRUE, ...)
 #' ```
 #' The `evaluate`
 #' argument is useful for debugging purposes. Extra arguments can be passed in 
 #' the format `interface.arg`.
 #'
-#' @example examples/examples-yeksar.R
+#' @example examples/examples-convoke.R
 #'
 #' @export
-yeksar <- function(...){
+convoke <- function(...){
     dots <- rlang::enquos0(...)
     if (!all(purrr::map_lgl(dots[-1],
                             ~rlang::is_formula(rlang::quo_get_expr(.))))) {
@@ -105,7 +105,7 @@ yeksar <- function(...){
     func_envs <- rlang::quo_get_env(func_specs[[1]])
     post_funcs <- purrr::map(dots[-1], f_rhs_func)
 
-    # functions to yeksar start from second argument
+    # functions to convoke start from second argument
     func_names <- purrr::map(func_specs, rlang::call_name)
 
     # transformation instructions are directly given as named arguments for 
@@ -119,7 +119,7 @@ yeksar <- function(...){
     # add function args as ones specified as first argument, plus an interface
     # argument, and whether to return produced function (for debugging) or
     # evaluate in place
-    yeksar_func_args <- c(rlang::call_args(dots[[1]]), 
+    convoke_func_args <- c(rlang::call_args(dots[[1]]), 
                           list(interface=func_names[[1]], evaluate=TRUE), 
                                rlang::pairlist2(...=))
 
@@ -129,7 +129,7 @@ yeksar <- function(...){
     # call2 arguments. Arguments should be say, basemeancalc.na.rm = T, where
     # I splice the first part, keeping second part and adding to 
     # function_args_transforms
-    yeksar_func_body <- quote({
+    convoke_func_body <- quote({
         func_to_call <- 
             rlang::call2(interface, !!!func_args_transforms[[interface]],
                   !!!get_interface_args(rlang::list2(...), interface));
@@ -139,24 +139,24 @@ yeksar <- function(...){
              env = rlang::env_clone(func_envs, parent = rlang::current_env())))}
         else return(func_to_call)})
 
-    retfunc <- rlang::new_function(yeksar_func_args, yeksar_func_body)
-    class(retfunc) <- c("yeksar", "function")
+    retfunc <- rlang::new_function(convoke_func_args, convoke_func_body)
+    class(retfunc) <- c("convoke", "function")
 
     return(retfunc)
 }
 
 #' @export
-`+.yeksar` <- function(e1, e2) {
-    if("yeksar" %in% class(e1)) {
-        yeksar_func <- e1
+`+.convoke` <- function(e1, e2) {
+    if("convoke" %in% class(e1)) {
+        convoke_func <- e1
         func_quo <- rlang::enquo0(e2)
     }
     else {
-        yeksar_func <- e2
+        convoke_func <- e2
         func_quo <- rlang::enquo0(e1)
     }
 
-    # TODO instead refactor the first part of yeksar e.g.func_specify$func_specs
+    # TODO instead refactor the first part of convoke e.g.func_specify$func_specs
     # TODO in below, enforce only parentheses and no brackets or braces
     # remove parentheses
     func_quo <- rlang::quo_set_expr(func_quo,
@@ -177,28 +177,28 @@ yeksar <- function(...){
 
     # TODO below could be written shorter
     # it is essential to clone the environment otherwise is inherited
-    yeksar_env <- rlang::env_clone(rlang::fn_env(yeksar_func))
-    func_args_transforms <- c(rlang::env_get(yeksar_env,
+    convoke_env <- rlang::env_clone(rlang::fn_env(convoke_func))
+    func_args_transforms <- c(rlang::env_get(convoke_env,
                                   "func_args_transforms"), func_args_transform)
     func_envs <- rlang::env_clone(func_env, parent = 
-                                  rlang::env_get(yeksar_env, "func_envs"))
-    post_funcs <- c(rlang::env_get(yeksar_env, "post_funcs"), post_func)
+                                  rlang::env_get(convoke_env, "func_envs"))
+    post_funcs <- c(rlang::env_get(convoke_env, "post_funcs"), post_func)
 
-    rlang::env_bind(yeksar_env, func_args_transforms = func_args_transforms,
+    rlang::env_bind(convoke_env, func_args_transforms = func_args_transforms,
              func_envs = func_envs, post_funcs = post_funcs)
 
-    rlang::fn_env(yeksar_func) <- yeksar_env
+    rlang::fn_env(convoke_func) <- convoke_env
 
-    return(yeksar_func)
+    return(convoke_func)
 }
 
 #' @export
-print.yeksar <- function(x, ...) {
+print.convoke <- function(x, ...) {
     func_args_transforms <- rlang::env_get(rlang::fn_env(x),
                                            "func_args_transforms")
     func_names <- names(func_args_transforms)
 
-    header <- paste("yeksar function with", length(func_names), "interfaces")
+    header <- paste("convoke function with", length(func_names), "interfaces")
     interfaces <- paste(" ", "interfaces:", 
                         paste(func_names, "()", sep="", collapse=", "))
     arguments <- paste(" ", "args:", 

@@ -99,9 +99,9 @@
 
     
     
-<div id="the-yeksar-function" class="section level1">
+<div id="the-convoke-function" class="section level1">
 <h1 class="hasAnchor">
-<a href="#the-yeksar-function" class="anchor"></a>The <code>yeksar</code> Function</h1>
+<a href="#the-convoke-function" class="anchor"></a>The <code>convoke</code> Function</h1>
 <p>Here is one example of different function interfaces doing the same thing and how the provided DSL would simplify this issue.</p>
 <p>The two functions each take a different data type in, produce a different out data, use different name for trim argument, and one does not have a default value for column (works only on vectors).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -137,11 +137,11 @@
 <span class="co">#&gt; [1] 11.11111</span></code></pre></div>
 <p>Three vastly different APIs. Now, for unification:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">mymean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/yeksar.html">yeksar</a></span><span class="op">(</span><span class="fu">..</span><span class="op">(</span>tibble <span class="op">=</span>, column <span class="op">=</span>, trim <span class="op">=</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="op">(</span><span class="va">mymean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convoke.html">convoke</a></span><span class="op">(</span><span class="fu">..</span><span class="op">(</span>tibble <span class="op">=</span>, column <span class="op">=</span>, trim <span class="op">=</span><span class="op">)</span>,
        <span class="fu">basemeancalc</span><span class="op">(</span>listdata <span class="op">=</span> <span class="va">tibble</span><span class="op">[[</span><span class="va">column</span><span class="op">]</span><span class="op">]</span>, trimmed <span class="op">=</span> <span class="va">trim</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,
        <span class="fu">tidymeancalc</span><span class="op">(</span>tibbledata <span class="op">=</span> <span class="va">tibble</span>, column <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="va">column</span>, trimend <span class="op">=</span> <span class="va">trim</span>,
                     trimstart <span class="op">=</span> <span class="va">trim</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; yeksar function with 2 interfaces</span>
+<span class="co">#&gt; convoke function with 2 interfaces</span>
 <span class="co">#&gt;   interfaces: basemeancalc(), tidymeancalc()</span>
 <span class="co">#&gt;   args: tibble, column, trim, interface = basemeancalc, interface.arg</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">

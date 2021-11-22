@@ -95,7 +95,7 @@
 <a href="#tyecon-" class="anchor"></a>tyecon <img src="reference/figures/logo.svg" align="right" height="139">
 </h1></div>
 <p>A utility package presently aimed at making assembling functions and results easier and quicker.</p>
-<p>To this aim, the <code>yeksar</code> function, with its special specification, is used to unify interfaces between various functions as desired. The <code>%to%</code> operator allows one to return multiple results from the same object in a single dataframe row with columns being the names of each result instance.</p>
+<p>To this aim, the <code>convoke</code> function, with its special specification, is used to unify interfaces between various functions as desired. The <code>%to%</code> operator allows one to return multiple results from the same object in a single dataframe row with columns being the names of each result instance.</p>
 <p>The ultimate goal of the package is to act as an API, for model builders and package writers, to make their functions more easily accessible without having to do rewrites themselves.</p>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
@@ -104,12 +104,12 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">foo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">a1</span>, <span class="va">b1</span><span class="op">)</span> <span class="op">{</span> <span class="va">a1</span><span class="op">/</span><span class="va">b1</span> <span class="op">}</span>
 <span class="va">bar</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">b2</span>, <span class="va">a2</span><span class="op">)</span> <span class="op">{</span> <span class="va">a2</span><span class="op">/</span><span class="va">b2</span> <span class="op">}</span>
-<span class="va">yeksared</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/yeksar.html">yeksar</a></span><span class="op">(</span><span class="fu">..</span><span class="op">(</span>..a <span class="op">=</span> , ..b <span class="op">=</span> <span class="op">)</span>,
+<span class="va">convoked</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/convoke.html">convoke</a></span><span class="op">(</span><span class="fu">..</span><span class="op">(</span>..a <span class="op">=</span> , ..b <span class="op">=</span> <span class="op">)</span>,
                    <span class="fu">foo</span><span class="op">(</span>a1 <span class="op">=</span> <span class="va">..a</span>, b1 <span class="op">=</span> <span class="va">..b</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,
                    <span class="fu"><a href="https://rdrr.io/r/grDevices/plotmath.html">bar</a></span><span class="op">(</span>b2 <span class="op">=</span> <span class="va">..b</span>, a2 <span class="op">=</span> <span class="va">..a</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span><span class="op">)</span>
 <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dfr</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html">set_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"foo"</span>, <span class="st">"bar"</span><span class="op">)</span><span class="op">)</span>,
-              <span class="op">~</span> <span class="fu">yeksared</span><span class="op">(</span><span class="fl">3</span>,<span class="fl">9</span>, interface <span class="op">=</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Which would return the result of each function as a dataframe column value. Storing the functions in lists or as anonymous functions would have quickly become rather verbose, especially when one needs to supply different arguments at different stages of a model-building script for instance. Consult <code>yeksar</code> examples and the vignettes for further information on the facilities of <code>yeksar</code>.</p>
+              <span class="op">~</span> <span class="fu">convoked</span><span class="op">(</span><span class="fl">3</span>,<span class="fl">9</span>, interface <span class="op">=</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Which would return the result of each function as a dataframe column value. Storing the functions in lists or as anonymous functions would have quickly become rather verbose, especially when one needs to supply different arguments at different stages of a model-building script for instance. Consult <code>convoke</code> examples and the vignettes for further information on the facilities of <code>convoke</code>.</p>
 <p>As for the <code>%to%</code> operator, it is more of a convenience function, omitting the process of having to build a named vector of directives, then pass it to something like <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map</a></code> just to get the results of applying various functions to the same object. Nevertheless, this is often the need of any data analysis task. For instance, once a linear regression model is built, one might need to extract the various parts of the result of <code>summary(lm.model)</code>. The <code>%to%</code> operator allows this with concise syntax:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">lm.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Sepal.Width</span> <span class="op">~</span> <span class="va">Sepal.Length</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
@@ -131,7 +131,7 @@
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
 <span class="co"># install tyecon using the remotes package</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"TerseTears/tyecon"</span><span class="op">)</span></code></pre></div>
-<p>I am somewhat uncertain of the present limits of the package since there are many ways to write a function in R. Therefore, if you do write a function that doesn’t behave well with <code>yeksar</code> please do open an issue.</p>
+<p>I am somewhat uncertain of the present limits of the package since there are many ways to write a function in R. Therefore, if you do write a function that doesn’t behave well with <code>convoke</code> please do open an issue.</p>
 <p>To uninstall the package, run the usual <code>remove.packages</code> command.</p>
 </div>
 <div id="main-idea" class="section level2">
@@ -163,7 +163,7 @@ Need to add examples and documentation</li>
 Need to add tests somehow (tricky, since working with language constructs themselves)</li>
 <li>
 <input type="checkbox" disabled>
-TODO QoL Need to make dsl nicer, remove unintuitive interfaces by wrapping functions (e.g. currently, need ..() in yeksar)</li>
+TODO QoL Need to make dsl nicer, remove unintuitive interfaces by wrapping functions (e.g. currently, need ..() in convoke)</li>
 <li>
 <input type="checkbox" disabled checked>
 Better errors when things fail</li>
@@ -178,7 +178,7 @@ Still need a nice interface for post-processing of the result, so as to make the
 Some sort of let block for R, where each line uses exactly the data, without needing to specify it.</li>
 <li>
 <input type="checkbox" disabled checked>
-Modify printing of <code>yeksar</code> functions as well and include list of functions and arguments or something.</li>
+Modify printing of <code>convoke</code> functions as well and include list of functions and arguments or something.</li>
 <li>
 <input type="checkbox" disabled>
 TODO Need to decide on how to read function argument transformations from a file and what file format (likely yaml) to use for this purpose.</li>
