@@ -3,5 +3,7 @@
 *.Rproj
 .Rbuildignore
 .RData
+_pkgdown.yml
+pkgdown/
 
 inst/doc

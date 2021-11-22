@@ -17,7 +17,7 @@ bar <- function(b2, a2) { a2/b2 }
 yeksared <- yeksar(..(..a = , ..b = ),
                    foo(a1 = ..a, b1 = ..b) ~ .,
                    bar(b2 = ..b, a2 = ..a) ~ .)
-purrr::map_dfr(set_names(c("foo", "bar")),
+purrr::map_dfr(rlang::set_names(c("foo", "bar")),
               ~ yeksared(3,9, interface = .))
 ```
 

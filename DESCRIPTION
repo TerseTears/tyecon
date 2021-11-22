@@ -9,6 +9,8 @@ Authors@R:
 Description: The package allows one to unify different functions under a desired
     interface, as well as providing facilities for quicker access to analysis
     results.
+URL: https://tersetears.github.io/tyecon/
+BugReports: https://github.com/TerseTears/tyecon/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
