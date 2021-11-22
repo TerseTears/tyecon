@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tyecon</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -71,7 +71,14 @@
   <a href="news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/TerseTears/tyecon/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -100,7 +107,7 @@
 <span class="va">yeksared</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/yeksar.html">yeksar</a></span><span class="op">(</span><span class="fu">..</span><span class="op">(</span>..a <span class="op">=</span> , ..b <span class="op">=</span> <span class="op">)</span>,
                    <span class="fu">foo</span><span class="op">(</span>a1 <span class="op">=</span> <span class="va">..a</span>, b1 <span class="op">=</span> <span class="va">..b</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,
                    <span class="fu"><a href="https://rdrr.io/r/grDevices/plotmath.html">bar</a></span><span class="op">(</span>b2 <span class="op">=</span> <span class="va">..b</span>, a2 <span class="op">=</span> <span class="va">..a</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span><span class="op">)</span>
-<span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dfr</a></span><span class="op">(</span><span class="fu">set_names</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"foo"</span>, <span class="st">"bar"</span><span class="op">)</span><span class="op">)</span>,
+<span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dfr</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html">set_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"foo"</span>, <span class="st">"bar"</span><span class="op">)</span><span class="op">)</span>,
               <span class="op">~</span> <span class="fu">yeksared</span><span class="op">(</span><span class="fl">3</span>,<span class="fl">9</span>, interface <span class="op">=</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Which would return the result of each function as a dataframe column value. Storing the functions in lists or as anonymous functions would have quickly become rather verbose, especially when one needs to supply different arguments at different stages of a model-building script for instance. Consult <code>yeksar</code> examples and the vignettes for further information on the facilities of <code>yeksar</code>.</p>
 <p>As for the <code>%to%</code> operator, it is more of a convenience function, omitting the process of having to build a named vector of directives, then pass it to something like <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map</a></code> just to get the results of applying various functions to the same object. Nevertheless, this is often the need of any data analysis task. For instance, once a linear regression model is built, one might need to extract the various parts of the result of <code>summary(lm.model)</code>. The <code>%to%</code> operator allows this with concise syntax:</p>
@@ -189,7 +196,16 @@ TODO Need to decide on coupling or decoupling of standard interfaces with the pr
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2>Links</h2>
+<ul class="list-unstyled">
+<li>Browse source code at <br><a href="https://github.com/TerseTears/tyecon/">https://​github.com/​TerseTears/​tyecon/​</a>
+</li>
+<li>Report a bug at <br><a href="https://github.com/TerseTears/tyecon/issues">https://​github.com/​TerseTears/​tyecon/​issues</a>
+</li>
+</ul>
+</div>
+<div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
