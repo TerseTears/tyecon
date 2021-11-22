@@ -1,3 +1,8 @@
+# tyecon 0.2.0
+
+* Add package site
+* Improve readme and vignettes
+
 # tyecon 0.1.0
 
 * Both `yeksar` and `%to%` should work in most elementary cases.
