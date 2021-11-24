@@ -87,23 +87,22 @@ pretty_func_args <- function(func) {
 #' @example examples/examples-convoke.R
 #'
 #' @export
-convoke <- function(...){
+convoke <- function(uniface, ...){
+    uniface <- rlang::enquo0(uniface)
     dots <- rlang::enquos0(...)
-    if (!all(purrr::map_lgl(dots[-1],
+    if (!all(purrr::map_lgl(dots,
                             ~rlang::is_formula(rlang::quo_get_expr(.))))) {
         rlang::abort("specification needs to be in formula form")
     }
-    if(!rlang::is_call(rlang::quo_get_expr(dots[[1]]), c(".", ".."))) {
-        rlang::abort("unified interface specification not a call,
-              or not one to . or .. (required for consistency)")
+    if(!rlang::is_call(rlang::quo_get_expr(uniface), "function")) {
+        rlang::abort("unified interface specification not a function call")
     }
-    if(!rlang::is_named(rlang::call_args(rlang::quo_get_expr(dots[[1]])))) {
-        rlang::abort("unified interface specification must contain = for args,
-              if no default is required, leave RHS empty")
+    if(!rlang::is_string(tail(rlang::call_args(uniface), n=2)[-2][[1]])) {
+        rlang::abort("unified function description needs to be string")
     }
-    func_specs <- purrr::map(dots[-1], f_lhs_quo)
+    func_specs <- purrr::map(dots, f_lhs_quo)
     func_envs <- rlang::quo_get_env(func_specs[[1]])
-    post_funcs <- purrr::map(dots[-1], f_rhs_func)
+    post_funcs <- purrr::map(dots, f_rhs_func)
 
     # functions to convoke start from second argument
     func_names <- purrr::map(func_specs, rlang::call_name)
@@ -119,7 +118,7 @@ convoke <- function(...){
     # add function args as ones specified as first argument, plus an interface
     # argument, and whether to return produced function (for debugging) or
     # evaluate in place
-    convoke_func_args <- c(rlang::call_args(dots[[1]]), 
+    convoke_func_args <- c(rlang::call_args(uniface)[[1]],
                           list(interface=func_names[[1]], evaluate=TRUE), 
                                rlang::pairlist2(...=))
 
