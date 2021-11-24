@@ -87,17 +87,15 @@ pretty_func_args <- function(func) {
 #'
 #' @export
 convoke <- function(uniface, ...){
-    uniface <- rlang::enquo0(uniface)
     dots <- rlang::enquos0(...)
     if (!all(purrr::map_lgl(dots,
                             ~rlang::is_formula(rlang::quo_get_expr(.))))) {
         rlang::abort("specification needs to be in formula form")
     }
-    if(!rlang::is_call(rlang::quo_get_expr(uniface), "function")) {
+    if(!rlang::is_function(uniface)) {
         rlang::abort("unified interface specification not a function call")
     }
-    if(!rlang::is_string(utils::tail(rlang::call_args(uniface),
-                                     n=2)[-2][[1]])) {
+    if(!rlang::is_string(rlang::fn_body(uniface)[[2]])) {
         rlang::abort("unified function description needs to be string")
     }
     func_specs <- purrr::map(dots, f_lhs_quo)
@@ -118,7 +116,7 @@ convoke <- function(uniface, ...){
     # add function args as ones specified as first argument, plus an interface
     # argument, and whether to return produced function (for debugging) or
     # evaluate in place
-    convoke_func_args <- c(rlang::call_args(uniface)[[1]],
+    convoke_func_args <- c(rlang::fn_fmls(uniface),
                           list(interface=func_names[[1]], evaluate=TRUE), 
                                rlang::pairlist2(...=))
 
@@ -200,8 +198,7 @@ print.convoke <- function(x, ...) {
 
     uniface <- rlang::env_get(rlang::fn_env(x), "uniface")
 
-    header <- paste("convoke function",
-                    utils::tail(rlang::call_args(uniface), n=2)[-2][[1]])
+    header <- paste("convoke function", rlang::fn_body(uniface)[[2]])
     interfaces <- paste(" ", "interfaces:", 
                         paste(func_names, "()", sep="", collapse=", "))
     arguments <- paste(" ", "args:", 

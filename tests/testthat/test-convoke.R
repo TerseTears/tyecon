@@ -148,10 +148,10 @@ test_that("supplying other than two-sided formulas is error", {
 test_that("supplying unifying interface other than function(a,b) is error", {
               foo <- function(a1, b1) { a1/b1 }
               bar <- function(b2, a2) { a2/b2 }
-              expect_error(convoke(foobar(a, b),
+              expect_error(convoke(mean(2, 3),
                                  foo(a1 = a, b1 = b) ~ .,
                                  bar(b2 = b, a2 = a) ~ .), "call")
-              expect_error(convoke({a; b},
+              expect_error(convoke({4; 9},
                                  foo(a1 = a, b1 = b) ~ .,
                                  bar(b2 = b, a2 = a) ~ .), "call")
 })
