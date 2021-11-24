@@ -134,7 +134,7 @@ convoke <- function(uniface, ...){
         # in the top (global) environment
         if (evaluate==TRUE){
             post_funcs[[interface]](rlang::eval_tidy(func_to_call,
-             env = rlang::env_clone(func_envs, parent = rlang::current_env())))}
+                env = rlang::env_poke_parent(rlang::current_env(), func_envs)))}
         else return(func_to_call)})
 
     retfunc <- rlang::new_function(convoke_func_args, convoke_func_body)
