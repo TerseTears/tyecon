@@ -197,7 +197,10 @@ print.convoke <- function(x, ...) {
                                            "func_args_transforms")
     func_names <- names(func_args_transforms)
 
-    header <- paste("convoke function with", length(func_names), "interfaces")
+    uniface <- rlang::env_get(rlang::fn_env(x), "uniface")
+
+    header <- paste("convoke function",
+                    tail(rlang::call_args(uniface), n=2)[-2][[1]])
     interfaces <- paste(" ", "interfaces:", 
                         paste(func_names, "()", sep="", collapse=", "))
     arguments <- paste(" ", "args:", 
