@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tyecon</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9000</span>
       </span>
     </div>
 
@@ -137,11 +137,11 @@
 <span class="co">#&gt; [1] 11.11111</span></code></pre></div>
 <p>Three vastly different APIs. Now, for unification:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">mymean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convoke.html">convoke</a></span><span class="op">(</span><span class="fu">..</span><span class="op">(</span>tibble <span class="op">=</span>, column <span class="op">=</span>, trim <span class="op">=</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="op">(</span><span class="va">mymean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/convoke.html">convoke</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">tibble</span>, <span class="va">column</span>, <span class="va">trim</span><span class="op">)</span> <span class="st">"unifying mean functions"</span>,
        <span class="fu">basemeancalc</span><span class="op">(</span>listdata <span class="op">=</span> <span class="va">tibble</span><span class="op">[[</span><span class="va">column</span><span class="op">]</span><span class="op">]</span>, trimmed <span class="op">=</span> <span class="va">trim</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,
        <span class="fu">tidymeancalc</span><span class="op">(</span>tibbledata <span class="op">=</span> <span class="va">tibble</span>, column <span class="op">=</span> <span class="op">!</span><span class="op">!</span><span class="va">column</span>, trimend <span class="op">=</span> <span class="va">trim</span>,
                     trimstart <span class="op">=</span> <span class="va">trim</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; convoke function with 2 interfaces</span>
+<span class="co">#&gt; convoke function unifying mean functions</span>
 <span class="co">#&gt;   interfaces: basemeancalc(), tidymeancalc()</span>
 <span class="co">#&gt;   args: tibble, column, trim, interface = basemeancalc, interface.arg</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">

@@ -1,3 +1,9 @@
+# tyecon (development version)
+
+* Change unifying function name to `convoke`
+* Change interface to use anonymous functions
+* Fix bug with environment hierarchy (commit 83d5e8dce01b9b7eb401e5c122bb999cc04179ec)
+
 # tyecon 0.2.0
 
 * Add package site
