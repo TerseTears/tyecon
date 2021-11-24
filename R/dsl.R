@@ -43,11 +43,9 @@ pretty_func_args <- function(func) {
 #'
 #' The unifying interface needs to be specified in the format
 #' ``` 
-#' ..(arg1 = default1, arg2 = default2, etc.)
+#' \(arg1 = default1, arg2 = default2, etc.) "description"
 #' ```
-#' Where the `..` prefix and parentheses are required and an error is
-#' thrown otherwise. The equality sign in arguments specifications is also
-#' necessary. Simply omit the default value on the RHS if not needed.
+#' This uses R's recent anonymous function syntax.
 #'
 #' ## Specifying function argument transformations
 #'
@@ -72,17 +70,18 @@ pretty_func_args <- function(func) {
 #' convoke_func + (func_spec ~ postfunc)
 #' ```
 #'
-#' @param ... First element is the desired unifying interface. Remaining
-#' elements are all the various specifications for function argument
+#' @param uniface \[`function`\] The desired unifying interface. Function returning
+#' a string as description
+#' 
+#' @param ... \[`function` ~ `purrr_lambda`\] All the various specifications for function argument
 #' transformations.
 #'
 #' @return Function with additional class *convoke* with arguments being
 #' ```
 #' convoke_func(specified_args, interface, evaluate = TRUE, ...)
 #' ```
-#' The `evaluate`
-#' argument is useful for debugging purposes. Extra arguments can be passed in 
-#' the format `interface.arg`.
+#' The `evaluate` argument is useful for debugging purposes. Extra arguments
+#' be passed in the format `interface.arg`.
 #'
 #' @example examples/examples-convoke.R
 #'
@@ -97,7 +96,8 @@ convoke <- function(uniface, ...){
     if(!rlang::is_call(rlang::quo_get_expr(uniface), "function")) {
         rlang::abort("unified interface specification not a function call")
     }
-    if(!rlang::is_string(tail(rlang::call_args(uniface), n=2)[-2][[1]])) {
+    if(!rlang::is_string(utils::tail(rlang::call_args(uniface),
+                                     n=2)[-2][[1]])) {
         rlang::abort("unified function description needs to be string")
     }
     func_specs <- purrr::map(dots, f_lhs_quo)
@@ -132,7 +132,8 @@ convoke <- function(uniface, ...){
         func_to_call <- 
             rlang::call2(interface, !!!func_args_transforms[[interface]],
                   !!!get_interface_args(rlang::list2(...), interface));
-        # TODO make the func_specs[[1]] more readable
+        # TODO there seems to be issue with env when the name is also defined
+        # in the top (global) environment
         if (evaluate==TRUE){
             post_funcs[[interface]](rlang::eval_tidy(func_to_call,
              env = rlang::env_clone(func_envs, parent = rlang::current_env())))}
@@ -200,7 +201,7 @@ print.convoke <- function(x, ...) {
     uniface <- rlang::env_get(rlang::fn_env(x), "uniface")
 
     header <- paste("convoke function",
-                    tail(rlang::call_args(uniface), n=2)[-2][[1]])
+                    utils::tail(rlang::call_args(uniface), n=2)[-2][[1]])
     interfaces <- paste(" ", "interfaces:", 
                         paste(func_names, "()", sep="", collapse=", "))
     arguments <- paste(" ", "args:", 

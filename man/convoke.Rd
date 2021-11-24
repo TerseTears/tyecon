@@ -4,20 +4,21 @@
 \alias{convoke}
 \title{Unify functions interfaces}
 \usage{
-convoke(...)
+convoke(uniface, ...)
 }
 \arguments{
-\item{...}{First element is the desired unifying interface. Remaining
-elements are all the various specifications for function argument
+\item{uniface}{[\code{function}] The desired unifying interface. Function returning
+a string as description}
+
+\item{...}{[\code{function} ~ \code{purrr_lambda}] All the various specifications for function argument
 transformations.}
 }
 \value{
 Function with additional class \emph{convoke} with arguments being\preformatted{convoke_func(specified_args, interface, evaluate = TRUE, ...)
 }
 
-The \code{evaluate}
-argument is useful for debugging purposes. Extra arguments can be passed in
-the format \code{interface.arg}.
+The \code{evaluate} argument is useful for debugging purposes. Extra arguments
+be passed in the format \code{interface.arg}.
 }
 \description{
 \code{convoke} unifies functions along a single specification using
@@ -28,12 +29,10 @@ changing the respective argument in the generated function.
 \section{Unifying Functions}{
 \subsection{Specifying the unifying interface}{
 
-The unifying interface needs to be specified in the format\preformatted{..(arg1 = default1, arg2 = default2, etc.)
+The unifying interface needs to be specified in the format\preformatted{\\(arg1 = default1, arg2 = default2, etc.) "description"
 }
 
-Where the \code{..} prefix and parentheses are required and an error is
-thrown otherwise. The equality sign in arguments specifications is also
-necessary. Simply omit the default value on the RHS if not needed.
+This uses R's recent anonymous function syntax.
 }
 
 \subsection{Specifying function argument transformations}{
@@ -65,18 +64,18 @@ simply by adding to the convoke function the new specifications:\preformatted{co
 # unifying functions with swapped arguments
 foo <- function(a1, b1) { a1/b1 }
 bar <- function(b2, a2) { a2/b2 }
-convoked <- convoke(..(..a = , ..b = ),
-                   foo(a1 = ..a, b1 = ..b) ~ .,
-                   bar(b2 = ..b, a2 = ..a) ~ .)
+convoked <- convoke(\(a, b) "",
+                   foo(a1 = a, b1 = b) ~ .,
+                   bar(b2 = b, a2 = a) ~ .)
 c(convoked(9,5), bar(5,9))
 c(convoked(9,5,interface="bar"), foo(9,5))
 
 # supplying optional arguments
 foo <- function(a1, b1, round=FALSE) { if(round) round(a1/b1) else a1/b1 }
 bar <- function(b2, a2) { a2/b2 }
-convoked <- convoke(..(..a = , ..b = ),
-                   foo(a1 = ..a, b1 = ..b) ~ .,
-                   bar(b2 = ..b, a2 = ..a) ~ .)
+convoked <- convoke(\(a, b) "",
+                   foo(a1 = a, b1 = b) ~ .,
+                   bar(b2 = b, a2 = a) ~ .)
 c(convoked(9,5, foo.round=FALSE), bar(5,9))
 c(convoked(9,5, foo.round=TRUE), round(bar(5,9)))
 
@@ -84,22 +83,22 @@ c(convoked(9,5, foo.round=TRUE), round(bar(5,9)))
 foo <- function(a1, b1) { a1/b1 }
 bar <- function(b2, a2) { a2/b2 }
 multfactor <- 2
-convoked <- convoke(..(..a = , ..b = ), 
-                   foo(a1 = ..a, b1 = ..b) ~ .*multfactor,
-                   bar(b2 = ..b, a2 = ..a) ~ .*multfactor)
+convoked <- convoke(\(a, b) "", 
+                   foo(a1 = a, b1 = b) ~ .*multfactor,
+                   bar(b2 = b, a2 = a) ~ .*multfactor)
 c(convoked(9,5), bar(5,9)*multfactor)
 multfunc <- function(x) x*2
-convoked <- convoke(..(..a = , ..b = ), 
-                   foo(a1 = ..a, b1 = ..b) ~ multfunc(.),
-                   bar(b2 = ..b, a2 = ..a) ~ multfunc(.))
+convoked <- convoke(\(a, b) "", 
+                   foo(a1 = a, b1 = b) ~ multfunc(.),
+                   bar(b2 = b, a2 = a) ~ multfunc(.))
 c(convoked(9,5), bar(5,9)*multfactor)
 
 # adding further functions later
 foo <- function(a1, b1) { a1/b1 }
 bar <- function(b2, a2) { a2/b2 }
 baz <- function(a3, b3) { a3/b3 }
-(convoked <- convoke(..(..a = , ..b = ), foo(a1 = ..a, b1 = ..b) ~ .))
-(convoked <- convoked + (bar(b2 = ..b, a2 = ..a) ~ .) +
-    (baz(a3 = ..a, b3 = ..b) ~ .))
+(convoked <- convoke(\(a, b) "", foo(a1 = a, b1 = b) ~ .))
+(convoked <- convoked + (bar(b2 = b, a2 = a) ~ .) +
+    (baz(a3 = a, b3 = b) ~ .))
 c(convoked(9,5, interface="baz"), bar(5,9))
 }

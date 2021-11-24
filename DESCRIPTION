@@ -23,6 +23,8 @@ Suggests:
     tibble
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+Depends:
+    R (>= 4.1.0)
 Imports: 
     stringr,
     purrr,
