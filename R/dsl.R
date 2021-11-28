@@ -42,7 +42,7 @@ pretty_func_args <- function(func, extra_args = NULL) {
     paste0(arg_names, arg_vals)
 }
 
-#' Unify functions interfaces
+#' Unify function interfaces
 #'
 #' `convoke` unifies functions along a single specification using
 #' statements on function argument transformations that would be needed. The
@@ -82,9 +82,12 @@ pretty_func_args <- function(func, extra_args = NULL) {
 #' convoke_func + (func_spec ~ postfunc)
 #' ```
 #'
+#' @family function assemblers
+#' @example examples/examples-convoke.R
+#'
 #' @param uniface \[`function`\] The desired unifying interface. Function returning
 #' a string as description
-#' 
+#'
 #' @param ... \[`function` ~ `purrr_lambda`\] All the various specifications for function argument
 #' transformations.
 #'
@@ -94,8 +97,6 @@ pretty_func_args <- function(func, extra_args = NULL) {
 #' ```
 #' The `evaluate` argument is useful for debugging purposes. Extra arguments
 #' be passed in the format `interface.arg`.
-#'
-#' @example examples/examples-convoke.R
 #'
 #' @export
 convoke <- function(uniface, ...){
@@ -129,8 +130,8 @@ convoke <- function(uniface, ...){
     # argument, and whether to return produced function (for debugging) or
     # evaluate in place
     convoke_func_args <- c(rlang::fn_fmls(uniface),
-                          list(interface=func_names[[1]], evaluate=TRUE), 
-                               rlang::pairlist2(...=))
+                          list(interface=func_names[[1]]),
+                          rlang::pairlist2(...=), list(evaluate=TRUE))
 
     # TODO fix needing to use quote instead of rlang functions, resulting from
     # the necessaity to not expand !!! and absence of quo0
@@ -325,6 +326,7 @@ print.conflate <- function(x, ...) {
 #'
 #' @example examples/examples-to-operator.R
 #'
+#' @family result assemblers
 #' @export
 #' @rdname to-operator
 `%to%` <- function(obj, blocks) {

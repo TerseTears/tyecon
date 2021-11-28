@@ -75,6 +75,8 @@ The package's DSL should be able to unify all the below cases
 * [x] Modify printing of `convoke` functions as well and include list of functions and arguments or something.
 * [ ] TODO Need to decide on how to read function argument transformations from a file and what file format (likely yaml) to use for this purpose.
 * [ ] TODO Need to decide on coupling or decoupling of standard interfaces with the project. Preference being decoupling and keeping the package as general as possible.
+* [ ] TODO Post-processing part seems unnecessary in most cases as we'd need the whole object most times. Replace it with optional post-processing and abandon formula syntax.
+* [ ] TODO Use `parsnip` and `broom` themselves to write the unifying interface specifications.
 
 ## License 
 

@@ -58,10 +58,8 @@ test_that("nested blocks work", {
               }, tibble::tibble(mean2=mean(testvec^2), sd=sd(testvec)))
 })
 
-# error handling 
 test_that("expression other than block is error", {
               expect_error(testvec %to% (mean ~ mean(.)), "block")
-              # TODO this case expect_error(testvec %to% mean, "block")
 })
 
 test_that("specifying other than formula is error", {

@@ -123,8 +123,6 @@ test_that("supplied default arguments work", {
               expect_equal(convoked(interface="foo"), bar(bval, 3))
 })
 
-# TODO testing for conditions to throw errors
-
 test_that("unknown optional argument is printed nicely", {
               foo <- function(a1, b1, simplify=TRUE) { a1/b1 }
               bar <- function(b2, a2) { a2/b2 }
