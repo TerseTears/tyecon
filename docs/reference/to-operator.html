@@ -81,7 +81,7 @@ the results to be returned in a single dataframe." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tyecon</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -103,6 +103,9 @@ the results to be returned in a single dataframe." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/compare-tidymodes.html">Fitting Models *Without* parsnip</a>
+    </li>
     <li>
       <a href="../articles/example-issues.html">Example Issues</a>
     </li>
@@ -184,7 +187,7 @@ in yet another braces pair.</p>
 <span class='r-in'>    <span class='va'>mean</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span></span>
 <span class='r-in'>    <span class='va'>sd</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span></span>
 <span class='r-in'><span class='op'>}</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 1 x 2</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 1 × 2</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>    mean    sd</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>1</span>  3.25  2.63</span>
@@ -195,7 +198,7 @@ in yet another braces pair.</p>
 <span class='r-in'>    <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>*</span><span class='va'>.</span><span class='op'>)</span> <span class='op'>}</span></span>
 <span class='r-in'>    <span class='va'>sd</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span></span>
 <span class='r-in'><span class='op'>}</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 1 x 2</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 1 × 2</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   mean2    sd</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>1</span>  25.5  2.63</span>
@@ -205,7 +208,7 @@ in yet another braces pair.</p>
 <span class='r-in'>    <span class='va'>itself</span> <span class='op'>~</span> <span class='va'>.</span></span>
 <span class='r-in'>    <span class='va'>itsmean</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span></span>
 <span class='r-in'><span class='op'>}</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 1 x 2</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 1 × 2</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   itself    itsmean</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;I&lt;list&gt;&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>1</span> <span style='color: #949494;'>&lt;dbl [4]&gt;</span>    3.25</span>
@@ -214,7 +217,7 @@ in yet another braces pair.</p>
 <span class='r-in'>    <span class='va'>itself</span> <span class='op'>~</span> <span class='va'>.</span></span>
 <span class='r-in'>    <span class='va'>itsextra</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='va'>.</span><span class='op'>)</span></span>
 <span class='r-in'><span class='op'>}</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 1 x 2</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #949494;'># A tibble: 1 × 2</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   itself    itsextra </span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;I&lt;list&gt;&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;I&lt;list&gt;&gt;</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> <span style='color: #BCBCBC;'>1</span> <span style='color: #949494;'>&lt;dbl [4]&gt;</span> <span style='color: #949494;'>&lt;dbl [5]&gt;</span></span>

@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tyecon</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -63,6 +63,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/compare-tidymodes.html">Fitting Models *Without* parsnip</a>
+    </li>
+    <li>
       <a href="articles/example-issues.html">Example Issues</a>
     </li>
   </ul>
@@ -95,11 +98,14 @@
 <a href="#tyecon-" class="anchor"></a>tyecon <img src="reference/figures/logo.svg" align="right" height="139">
 </h1></div>
 <p>A utility package presently aimed at making assembling functions and results easier and quicker.</p>
-<p>To this aim, the <code>convoke</code> function, with its special specification, is used to unify interfaces between various functions as desired. The <code>%to%</code> operator allows one to return multiple results from the same object in a single dataframe row with columns being the names of each result instance.</p>
 <p>The ultimate goal of the package is to act as an API, for model builders and package writers, to make their functions more easily accessible without having to do rewrites themselves.</p>
-<div id="example" class="section level2">
+<div id="examples" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
+<a href="#examples" class="anchor"></a>Examples</h2>
+<div id="convoke" class="section level3">
+<h3 class="hasAnchor">
+<a href="#convoke" class="anchor"></a><code>convoke</code>
+</h3>
 <p>Consider two functions with swapped arguments that we would want to use together without the hassle of writing multiple lines of code, storing the functions in lists, storing results in different variables etc. We just want to be able to change the “interface” with a simple argument:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">foo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">a1</span>, <span class="va">b1</span><span class="op">)</span> <span class="op">{</span> <span class="va">a1</span><span class="op">/</span><span class="va">b1</span> <span class="op">}</span>
@@ -110,8 +116,25 @@
 <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dfr</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html">set_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"foo"</span>, <span class="st">"bar"</span><span class="op">)</span><span class="op">)</span>,
               <span class="op">~</span> <span class="fu">convoked</span><span class="op">(</span><span class="fl">3</span>,<span class="fl">9</span>, interface <span class="op">=</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Which would return the result of each function as a dataframe column value. Storing the functions in lists or as anonymous functions would have quickly become rather verbose, especially when one needs to supply different arguments at different stages of a model-building script for instance. Consult <code>convoke</code> examples and the vignettes for further information on the facilities of <code>convoke</code>.</p>
-<p>As for the <code>%to%</code> operator, it is more of a convenience function, omitting the process of having to build a named vector of directives, then pass it to something like <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map</a></code> just to get the results of applying various functions to the same object. Nevertheless, this is often the need of any data analysis task. For instance, once a linear regression model is built, one might need to extract the various parts of the result of <code>summary(lm.model)</code>. The <code>%to%</code> operator allows this with concise syntax:</p>
+</div>
+<div id="conflate" class="section level3">
+<h3 class="hasAnchor">
+<a href="#conflate" class="anchor"></a><code>conflate</code>
+</h3>
+<p>Another issue is when one tries to use multiple generic methods together, yet each method comes with additional possible arguments. The <code>conflate</code> function allows one to supply all said arguments in one place (useful in <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code>, etc.):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">glm.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
+<span class="va">lm.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
+<span class="op">(</span><span class="va">conflated_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/conflate.html">conflate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">x</span>, correlation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">glm.model</span>, <span class="va">lm.model</span><span class="op">)</span>, <span class="op">~</span> 
+           <span class="fu">conflated_summary</span><span class="op">(</span><span class="va">.</span>, lm.symbolic.cor <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="to-operator" class="section level3">
+<h3 class="hasAnchor">
+<a href="#to-operator" class="anchor"></a><code>%to%</code> operator</h3>
+<p>As for the <code>%to%</code> operator, it is more of a convenience function, omitting the process of having to build a named vector of directives, then pass it to something like <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map</a></code> just to get the results of applying various functions to the same object. Nevertheless, this is often the need of any data analysis task. For instance, once a linear regression model is built, one might need to extract the various parts of the result of <code>summary(lm.model)</code>. The <code>%to%</code> operator allows this with concise syntax:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">lm.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Sepal.Width</span> <span class="op">~</span> <span class="va">Sepal.Length</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">lm.model</span><span class="op">)</span> <span class="op"><a href="reference/%to%.html">%to%</a></span> <span class="op">{</span>
     <span class="va">res.std.err</span> <span class="op">~</span> <span class="va">.</span><span class="op">$</span><span class="va">sigma</span>
@@ -122,11 +145,12 @@
 <span class="op">}</span></code></pre></div>
 <p>Which again, returns the results in a single dataframe row with column names being the name of each directive.</p>
 </div>
+</div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>The package still has a long way to go. Nevertheless, if you want to try it for yourself, here is the instruction:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install remotes package if not installed</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
 <span class="co"># install tyecon using the remotes package</span>
@@ -185,6 +209,18 @@ TODO Need to decide on how to read function argument transformations from a file
 <li>
 <input type="checkbox" disabled>
 TODO Need to decide on coupling or decoupling of standard interfaces with the project. Preference being decoupling and keeping the package as general as possible.</li>
+<li>
+<input type="checkbox" disabled>
+TODO Post-processing part seems unnecessary in most cases as we’d need the whole object most times. Replace it with optional post-processing and abandon formula syntax.</li>
+<li>
+<input type="checkbox" disabled>
+TODO Use <code>parsnip</code> and <code>broom</code> themselves to write the unifying interface specifications.</li>
+<li>
+<input type="checkbox" disabled>
+TODO Write tests for conflate</li>
+<li>
+<input type="checkbox" disabled>
+TODO QoL allow supplying custom arguments with <code><a href="https://rdrr.io/r/base/c.html">c()</a></code>, e.g. <code>stan_glm = c(chains=5, iter=500)</code>.</li>
 </ul>
 </div>
 <div id="license" class="section level2">

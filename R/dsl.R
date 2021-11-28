@@ -93,9 +93,9 @@ pretty_func_args <- function(func, extra_args = NULL) {
 #'
 #' @return Function with additional class *convoke* with arguments being
 #' ```
-#' convoke_func(specified_args, interface, evaluate = TRUE, ...)
+#' convoke_func(specified_args, interface, ..., evaluate = TRUE)
 #' ```
-#' The `evaluate` argument is useful for debugging purposes. Extra arguments
+#' The `evaluate` argument is useful for debugging purposes. Extra arguments can
 #' be passed in the format `interface.arg`.
 #'
 #' @export
@@ -234,7 +234,7 @@ names.convoke <- function(x) {
 #'
 #' # Combining Methods
 #'
-#' The `generic_spec` argument is the generic function as applied to
+#' The generic_spec argument is the generic function as applied to
 #' shared arguments between methods that are to be combined. Once this is
 #' decided, all additional arguments passed to the generated function need to
 #' be of the form `object_class.arg` that are arguments unique to each method

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dsl.R
 \name{convoke}
 \alias{convoke}
-\title{Unify functions interfaces}
+\title{Unify function interfaces}
 \usage{
 convoke(uniface, ...)
 }
@@ -14,10 +14,10 @@ a string as description}
 transformations.}
 }
 \value{
-Function with additional class \emph{convoke} with arguments being\preformatted{convoke_func(specified_args, interface, evaluate = TRUE, ...)
+Function with additional class \emph{convoke} with arguments being\preformatted{convoke_func(specified_args, interface, ..., evaluate = TRUE)
 }
 
-The \code{evaluate} argument is useful for debugging purposes. Extra arguments
+The \code{evaluate} argument is useful for debugging purposes. Extra arguments can
 be passed in the format \code{interface.arg}.
 }
 \description{
@@ -103,8 +103,6 @@ baz <- function(a3, b3) { a3/b3 }
 c(convoked(9,5, interface="baz"), bar(5,9))
 }
 \seealso{
-\code{\link{conflate}}
-
 Other function assemblers: 
 \code{\link{conflate}()}
 }

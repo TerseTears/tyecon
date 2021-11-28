@@ -22,7 +22,7 @@ Where \code{...} specifies additional arguments to be supplied in the form
 of various methods to be specified in a single function that it returns.
 }
 \section{Combining Methods}{
-The \code{generic_spec} argument is the generic function as applied to
+The generic_spec argument is the generic function as applied to
 shared arguments between methods that are to be combined. Once this is
 decided, all additional arguments passed to the generated function need to
 be of the form \code{object_class.arg} that are arguments unique to each method
@@ -48,8 +48,6 @@ purrr::map(list(glm.model, lm.model), ~
            conflated_summary(., lm.symbolic.cor = TRUE))
 }
 \seealso{
-\code{\link{convoke}}
-
 Other function assemblers: 
 \code{\link{convoke}()}
 }
