@@ -1,5 +1,6 @@
-# tyecon (development version)
+# tyecon 0.2.1
 
+* Add `conflate` function for use with generic methods
 * Change unifying function name to `convoke`
 * Change interface to use anonymous functions
 * Fix bug with environment hierarchy (commit 83d5e8dce01b9b7eb401e5c122bb999cc04179ec)
