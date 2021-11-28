@@ -62,3 +62,4 @@ testvec \%to\% {
     itsextra ~ c(2,.)
 }
 }
+\concept{result assemblers}

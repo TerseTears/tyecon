@@ -102,3 +102,10 @@ baz <- function(a3, b3) { a3/b3 }
     (baz(a3 = a, b3 = b) ~ .))
 c(convoked(9,5, interface="baz"), bar(5,9))
 }
+\seealso{
+\code{\link{conflate}}
+
+Other function assemblers: 
+\code{\link{conflate}()}
+}
+\concept{function assemblers}
