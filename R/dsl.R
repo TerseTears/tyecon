@@ -80,7 +80,7 @@ pretty_func_args <- function(func, extra_args = NULL) {
 #'
 #' @param argslist \[`list`\] The desired unifying arguments. A list call.
 #'
-#' @param ... \[`function` ~ `purrr_lambda`\] All the various specifications for function argument
+#' @param ... \[`function`\] All the various specifications for function argument
 #' transformations.
 #'
 #' @return Function with additional class *convoke* with arguments being
@@ -221,7 +221,7 @@ names.convoke <- function(x) {
 #' @family function assemblers
 #' @example examples/examples-conflate.R
 #'
-#' @param `generic_spec` \[`call`\] Generic function as applied to arguments 
+#' @param generic_spec \[`call`\] Generic function as applied to arguments 
 #' shared between all methods to be combined.
 #'
 #' @return Function with additional class *conflate* with arguments being
@@ -272,25 +272,88 @@ print.conflate <- function(x, ...) {
 }
 
 
-# TODO document and export this as well
+#' Maintain name as binding in local environment
+#'
+#' `conserve` allows its first argument to be bound to the name given as its
+#' second argument in the local environment.
+#'
+#' # Conserving Intermediate Objects
+#'
+#' The best use of `conserve` is when one needs to keep an object in a long
+#' sequence of commands to be used later in the same sequence (so mostly pipes).
+#' It is essential to provide this local context (e.g. using `local` or inside
+#' functions) and avoid altering the global environment, since internally,
+#' `rlang::local_bindings` is used. The `conserve` function is what is used with
+#' the "pipem" pipe to bind intermediary objects to provided symbols. Exported
+#' for the rare occasion it may be useful on its own. One can also specifically
+#' set `conserve(name)` directives among the `pipem` instructions.
+#'
+#' @family results assemblers
+#'
+#' @param obj \[R `object`\] Any object, specifically data.
+#' @param name \[`symbol` or `string`\] The name to which the object will be
+#' bound locally
+#'
+#' @return The `obj` itself. The side effect being local binding of the `obj` to
+#' the specified `name`.
+#'
+#' @export
 conserve <- function(obj, name) {
     # TODO there should be a simpler way than below to captures symbols in rlang
     rlang::local_bindings("{rlang::as_name(rlang::enquo(name))}" := obj,
         .frame = rlang::env_parent(rlang::caller_env()))
-    name
+    return(name)
 }
 
+#' Piping Environment for Brevity and Coalescence
+#'
+#' `%->%` pipem operator allows omission of the `%>%` pipe operator in its
+#' environment as well as setting local bindings that can be used at later stages.
+#' of the sequence of functions.
+#'
+#' # Writing Shorter, More Integrated Pipes
+#'
+#' Piping is usually one single context, therefore all the extra pipe operators
+#' at the end of each instruction seems extraneous. Nevertheless, one may need
+#' to record the result of a pipe up to a certain stage, to later build the whole
+#' object out of the simpler modifications of the original object. This too is 
+#' Something that the simple pipe operator can't handle. Therefore, the solution
+#' is to define a context for these two cases, perform the operations therein,
+#' and return the desired result. That is what the "pipem" operator does.
+#'
+#' # Usage of the *pipem* Operator
+#'
+#' ```
+#' object %->% {instructions}
+#' ```
+#' 
+#' The object part can be any single object or the result of previous piping
+#' operations. The instructions are exactly as if each command was sequentially
+#' passed to the next via the conventional *magrittr* pipe. Each time a function
+#' instruction is followed by a symbol, that symbol is bound to the object
+#' resulting from the sequence up to that stage of the sequence.
+#'
+#' @family functions assemblers, results assemblers
+#'
+#' @param obj \[R `object`\] Any object, specifically data or results of
+#' previous pipes.
+#' @param instructions \[individual `symbols` and R `commands`\] Instructions
+#' wrapped in curly braces to encapsualte the context of the pipe.
+#'
+#' @return An object resulting from the transformations applied to it by the 
+#' `instructions`.
+#'
 #' @export
-`%->%` <- function(obj, commands) {
-    commands <- rlang::enquo(commands)
-    commands_env <- rlang::quo_get_env(commands)
-    commands_expr <- rlang::quo_get_expr(commands)[-1]
-    commands_expr <- purrr::modify_if(commands_expr, rlang::is_symbol,
+`%->%` <- function(obj, instructions) {
+    instructions <- rlang::enquo(instructions)
+    instructions_env <- rlang::quo_get_env(instructions)
+    instructions_expr <- rlang::quo_get_expr(instructions)[-1]
+    instructions_expr <- purrr::modify_if(instructions_expr, rlang::is_symbol,
         ~rlang::expr(conserve(!!.)))
     rlang::eval_tidy(
-        purrr::reduce(commands_expr, ~ rlang::expr(!!.x %>% !!.y),
+        purrr::reduce(instructions_expr, ~ rlang::expr(!!.x %>% !!.y),
             .init = rlang::expr(!!obj)),
-        env = commands_env)
+        env = instructions_env)
 }
 
 # TODO %to% should also work with map and multiple data
