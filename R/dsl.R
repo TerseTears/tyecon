@@ -53,11 +53,10 @@ pretty_func_args <- function(func, extra_args = NULL) {
 #'
 #' ## Specifying the unifying interface
 #'
-#' The unifying interface needs to be specified in the format
+#' The unifying interface needs to be specified as arglist for the new function
 #' ``` 
-#' \(arg1 = default1, arg2 = default2, etc.) "description"
+#' list(arg1 = default1, arg2 = default2, etc.)
 #' ```
-#' This uses R's recent anonymous function syntax.
 #'
 #' ## Specifying function argument transformations
 #'
@@ -67,12 +66,14 @@ pretty_func_args <- function(func, extra_args = NULL) {
 #' postprocess(result)
 #' ```
 #' Essentially, pass the function as if it is to take
-#' arguments from the unified function. 
+#' arguments from the unified function.
+#'
 #' ### Postprocessing function
+#'
 #' The postprocess function on the right of the formula specifies what
-#' postprocessing is required on the result of applying `func1`. It is to be 
+#' postprocessing is required on the result of applying `func1`. It is to be
 #' specified similarly to how functions in `purrr::map` are specified (that is
-#' by the `.` and `.x` syntax.
+#' by the `.` and `.x` syntax).
 #'
 #' # Composing functions
 #'
@@ -85,8 +86,7 @@ pretty_func_args <- function(func, extra_args = NULL) {
 #' @family function assemblers
 #' @example examples/examples-convoke.R
 #'
-#' @param uniface \[`function`\] The desired unifying interface. Function returning
-#' a string as description
+#' @param argslist \[`list`\] The desired unifying arguments. A list call.
 #'
 #' @param ... \[`function` ~ `purrr_lambda`\] All the various specifications for function argument
 #' transformations.
@@ -99,17 +99,16 @@ pretty_func_args <- function(func, extra_args = NULL) {
 #' be passed in the format `interface.arg`.
 #'
 #' @export
-convoke <- function(uniface, ...){
+convoke <- function(argslist, ...){
     dots <- rlang::enquos0(...)
+    # TODO possibly would benefit from also capturing environment
+    argslist <- rlang::enexpr(argslist)
     if (!all(purrr::map_lgl(dots,
                             ~rlang::is_formula(rlang::quo_get_expr(.))))) {
         rlang::abort("specification needs to be in formula form")
     }
-    if(!rlang::is_function(uniface)) {
-        rlang::abort("unified interface specification not a function call")
-    }
-    if(!rlang::is_string(rlang::fn_body(uniface)[[2]])) {
-        rlang::abort("unified function description needs to be string")
+    if(!rlang::is_call(argslist, "list")) {
+        rlang::abort("unified interface specification not a list call")
     }
     func_specs <- purrr::map(dots, f_lhs_quo)
     func_envs <- rlang::quo_get_env(func_specs[[1]])
@@ -129,7 +128,7 @@ convoke <- function(uniface, ...){
     # add function args as ones specified as first argument, plus an interface
     # argument, and whether to return produced function (for debugging) or
     # evaluate in place
-    convoke_func_args <- c(rlang::fn_fmls(uniface),
+    convoke_func_args <- c(set_call_args_names(rlang::call_args(argslist)),
                           list(interface=func_names[[1]]),
                           rlang::pairlist2(...=), list(evaluate=TRUE))
 
@@ -208,17 +207,12 @@ print.convoke <- function(x, ...) {
     func_args_transforms <- rlang::env_get(rlang::fn_env(x),
                                            "func_args_transforms")
     func_names <- names(func_args_transforms)
-
-    uniface <- rlang::env_get(rlang::fn_env(x), "uniface")
-
-    header <- paste("convoke function", rlang::fn_body(uniface)[[2]])
     interfaces <- paste(" ", "interfaces:", 
                         paste(func_names, "()", sep="", collapse=", "))
     arguments <- paste(" ", "args:",
                        paste(pretty_func_args(x, "interface.args"),
                              collapse=", "))
-
-    cat(header, interfaces, arguments, sep="\n")
+    cat("convoke function", interfaces, arguments, sep="\n")
 }
 
 #' @export

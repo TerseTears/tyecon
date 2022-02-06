@@ -62,7 +62,7 @@ mean(mydf$x, trim = 0.1, na.rm = T)
 Three vastly different APIs. Now, for unification:
 
 ```{r convoke-example}
-(mymean <- convoke(\(tibble, column, trim) "unifying mean functions",
+(mymean <- convoke(list(tibble, column, trim),
        basemeancalc(listdata = tibble[[column]], trimmed = trim) ~ .,
        tidymeancalc(tibbledata = tibble, column = !!column, trimend = trim,
                     trimstart = trim) ~ .))

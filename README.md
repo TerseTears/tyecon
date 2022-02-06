@@ -13,7 +13,7 @@ Consider two functions with swapped arguments that we would want to use together
 ```r
 foo <- function(a1, b1) { a1/b1 }
 bar <- function(b2, a2) { a2/b2 }
-convoked <- convoke(\(a, b) "unifying swapped arguments",
+convoked <- convoke(list(a, b),
                    foo(a1 = a, b1 = b) ~ .,
                    bar(b2 = b, a2 = a) ~ .)
 purrr::map_dfr(rlang::set_names(c("foo", "bar")),
