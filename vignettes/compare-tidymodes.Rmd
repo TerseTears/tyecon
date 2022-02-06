@@ -44,10 +44,10 @@ First, we unify the models:
 ```{r, message=F}
 (linear_model <-
     convoke(list(formula, data),
-            lm(formula = formula, data = data) ~ .,
-            stan_glm(formula = formula, data = data, mean_PPD = FALSE) ~ .,
+            lm(formula = formula, data = data),
+            stan_glm(formula = formula, data = data, mean_PPD = FALSE),
             glmnet(x = model.frame(formula, data = data)[-1],
-                   y = model.frame(formula, data = data)[[1]]) ~ .))
+                   y = model.frame(formula, data = data)[[1]])))
 ```
 
 ```{r, results='hide'}

@@ -63,9 +63,9 @@ Three vastly different APIs. Now, for unification:
 
 ```{r convoke-example}
 (mymean <- convoke(list(tibble, column, trim),
-       basemeancalc(listdata = tibble[[column]], trimmed = trim) ~ .,
+       basemeancalc(listdata = tibble[[column]], trimmed = trim),
        tidymeancalc(tibbledata = tibble, column = !!column, trimend = trim,
-                    trimstart = trim) ~ .))
+                    trimstart = trim)))
 ```
 
 ```{r}
@@ -76,7 +76,7 @@ map(set_names(c("basemeancalc", "tidymeancalc")),
 One can also add additional specifications later:
 
 ```{r}
-mymean <- mymean + (mean(x = tibble[[column]], trimmed = trim) ~ .)
+mymean <- mymean + ~mean(x = tibble[[column]], trimmed = trim)
 mymean(mydf, "x", 0.1, interface = "mean", mean.na.rm=T)
 ```
 

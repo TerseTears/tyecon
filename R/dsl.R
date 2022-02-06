@@ -60,27 +60,19 @@ pretty_func_args <- function(func, extra_args = NULL) {
 #'
 #' ## Specifying function argument transformations
 #'
-#' Transformations follow the formula format
+#' Transformations follows the function specification format
 #' ```
-#' func1(func1arg1 = transformed_arg1, func1arg2 = transformed_arg2) ~
-#' postprocess(result)
+#' func1(func1arg1 = transformed_arg1, func1arg2 = transformed_arg2)
 #' ```
 #' Essentially, pass the function as if it is to take
 #' arguments from the unified function.
-#'
-#' ### Postprocessing function
-#'
-#' The postprocess function on the right of the formula specifies what
-#' postprocessing is required on the result of applying `func1`. It is to be
-#' specified similarly to how functions in `purrr::map` are specified (that is
-#' by the `.` and `.x` syntax).
 #'
 #' # Composing functions
 #'
 #' It is also possible to progressively add functions to a convoke function
 #' simply by adding to the convoke function the new specifications:
 #' ```
-#' convoke_func + (func_spec ~ postfunc)
+#' convoke_func + ~func_spec
 #' ```
 #'
 #' @family function assemblers
@@ -100,19 +92,17 @@ pretty_func_args <- function(func, extra_args = NULL) {
 #'
 #' @export
 convoke <- function(argslist, ...){
-    dots <- rlang::enquos0(...)
+    func_specs <- rlang::enquos0(...)
     # TODO possibly would benefit from also capturing environment
     argslist <- rlang::enexpr(argslist)
-    if (!all(purrr::map_lgl(dots,
-                            ~rlang::is_formula(rlang::quo_get_expr(.))))) {
-        rlang::abort("specification needs to be in formula form")
+    if (!all(purrr::map_lgl(func_specs,
+                            ~rlang::is_call_simple(rlang::quo_get_expr(.))))) {
+        rlang::abort("specifications need to be function calls")
     }
     if(!rlang::is_call(argslist, "list")) {
         rlang::abort("unified interface specification not a list call")
     }
-    func_specs <- purrr::map(dots, f_lhs_quo)
     func_envs <- rlang::quo_get_env(func_specs[[1]])
-    post_funcs <- purrr::map(dots, f_rhs_func)
 
     # functions to convoke start from second argument
     func_names <- purrr::map(func_specs, rlang::call_name)
@@ -123,7 +113,6 @@ convoke <- function(argslist, ...){
 
     # name components to access them with the interface argument
     names(func_args_transforms) <- func_names
-    names(post_funcs) <- func_names
 
     # add function args as ones specified as first argument, plus an interface
     # argument, and whether to return produced function (for debugging) or
@@ -145,8 +134,8 @@ convoke <- function(argslist, ...){
         # TODO there seems to be issue with env when the name is also defined
         # in the top (global) environment
         if (evaluate==TRUE){
-            post_funcs[[interface]](rlang::eval_tidy(func_to_call,
-                env = rlang::env_poke_parent(rlang::current_env(), func_envs)))}
+            rlang::eval_tidy(func_to_call,
+                env = rlang::env_poke_parent(rlang::current_env(), func_envs))}
         else return(func_to_call)})
 
     retfunc <- rlang::new_function(convoke_func_args, convoke_func_body)
@@ -159,31 +148,27 @@ convoke <- function(argslist, ...){
 `+.convoke` <- function(e1, e2) {
     if("convoke" %in% class(e1)) {
         convoke_func <- e1
-        func_quo <- rlang::enquo0(e2)
+        func_spec <- rlang::enquo0(e2)
     }
     else {
         convoke_func <- e2
-        func_quo <- rlang::enquo0(e1)
+        func_spec <- rlang::enquo0(e1)
     }
-
     # TODO instead refactor the first part of convoke e.g.func_specify$func_specs
     # TODO in below, enforce only parentheses and no brackets or braces
     # remove parentheses
-    func_quo <- rlang::quo_set_expr(func_quo,
-                                    rlang::quo_get_expr(func_quo)[[2]])
+    func_spec <- rlang::quo_set_expr(func_spec,
+                                    rlang::quo_get_expr(func_spec)[[2]])
 
-    if (!rlang::is_formula(rlang::quo_get_expr(func_quo))) {
-        rlang::abort("specification needs to be in formula form")
+    if (!rlang::is_call_simple(rlang::quo_get_expr(func_spec))) {
+        rlang::abort("specification needs to be function call")
     }
-    func_spec <- f_lhs_quo(func_quo)
     func_env <- rlang::quo_get_env(func_spec)
     # wrap in list since can't assign names to singletons otherwise
-    post_func <- list(f_rhs_func(func_quo))
     func_args_transform <- list(rlang::call_args(func_spec))
     func_name <- rlang::call_name(func_spec)
 
     names(func_args_transform) <- func_name
-    names(post_func) <- func_name
 
     # TODO below could be written shorter
     # it is essential to clone the environment otherwise is inherited
@@ -192,10 +177,9 @@ convoke <- function(argslist, ...){
                                   "func_args_transforms"), func_args_transform)
     func_envs <- rlang::env_clone(func_env, parent = 
                                   rlang::env_get(convoke_env, "func_envs"))
-    post_funcs <- c(rlang::env_get(convoke_env, "post_funcs"), post_func)
 
     rlang::env_bind(convoke_env, func_args_transforms = func_args_transforms,
-             func_envs = func_envs, post_funcs = post_funcs)
+             func_envs = func_envs)
 
     rlang::fn_env(convoke_func) <- convoke_env
 
