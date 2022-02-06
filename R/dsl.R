@@ -271,6 +271,28 @@ print.conflate <- function(x, ...) {
     cat(header, arguments, sep="\n")
 }
 
+
+# TODO document and export this as well
+conserve <- function(obj, name) {
+    # TODO there should be a simpler way than below to captures symbols in rlang
+    rlang::local_bindings("{rlang::as_name(rlang::enquo(name))}" := obj,
+        .frame = rlang::env_parent(rlang::caller_env()))
+    name
+}
+
+#' @export
+`%->%` <- function(obj, commands) {
+    commands <- rlang::enquo(commands)
+    commands_env <- rlang::quo_get_env(commands)
+    commands_expr <- rlang::quo_get_expr(commands)[-1]
+    commands_expr <- purrr::modify_if(commands_expr, rlang::is_symbol,
+        ~rlang::expr(conserve(!!.)))
+    rlang::eval_tidy(
+        purrr::reduce(commands_expr, ~ rlang::expr(!!.x %>% !!.y),
+            .init = rlang::expr(!!obj)),
+        env = commands_env)
+}
+
 # TODO %to% should also work with map and multiple data
 # function to pass object to multiple lines of code and return results together
 
