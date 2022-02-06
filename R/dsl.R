@@ -300,7 +300,8 @@ print.conflate <- function(x, ...) {
 #' @export
 conserve <- function(obj, name) {
     # TODO there should be a simpler way than below to captures symbols in rlang
-    rlang::local_bindings("{rlang::as_name(rlang::enquo(name))}" := obj,
+    rlang::local_bindings(
+        !!!rlang::set_names(list(obj), rlang::as_name(rlang::enquo(name))),
         .frame = rlang::env_parent(rlang::caller_env()))
     return(name)
 }
