@@ -288,7 +288,7 @@ print.conflate <- function(x, ...) {
 #' for the rare occasion it may be useful on its own. One can also specifically
 #' set `conserve(name)` directives among the `pipem` instructions.
 #'
-#' @family results assemblers
+#' @family result assemblers
 #'
 #' @param obj \[R `object`\] Any object, specifically data.
 #' @param name \[`symbol` or `string`\] The name to which the object will be
@@ -306,21 +306,22 @@ conserve <- function(obj, name) {
     return(name)
 }
 
-#' Piping Environment for Brevity and Coalescence
+#' Piping environment for brevity and coalescence
 #'
 #' `%->%` pipem operator allows omission of the `%>%` pipe operator in its
-#' environment as well as setting local bindings that can be used at later stages.
-#' of the sequence of functions.
+#' environment as well as setting local bindings that can be used at later
+#' stages of the sequence of functions.
 #'
 #' # Writing Shorter, More Integrated Pipes
 #'
 #' Piping is usually one single context, therefore all the extra pipe operators
 #' at the end of each instruction seems extraneous. Nevertheless, one may need
-#' to record the result of a pipe up to a certain stage, to later build the whole
-#' object out of the simpler modifications of the original object. This too is 
-#' Something that the simple pipe operator can't handle. Therefore, the solution
-#' is to define a context for these two cases, perform the operations therein,
-#' and return the desired result. That is what the "pipem" operator does.
+#' to record the result of a pipe up to a certain stage, to later build the
+#' whole object out of the simpler modifications of the original object. This
+#' too is Something that the simple pipe operator can't handle. Therefore,
+#' the solution is to define a context for these two cases, perform the
+#' operations therein, and return the desired result. That is what the "pipem"
+#' operator does.
 #'
 #' # Usage of the *pipem* Operator
 #'
@@ -334,7 +335,8 @@ conserve <- function(obj, name) {
 #' instruction is followed by a symbol, that symbol is bound to the object
 #' resulting from the sequence up to that stage of the sequence.
 #'
-#' @family functions assemblers, results assemblers
+#' @family result assemblers
+#' @example examples/examples-pipem-operator.R
 #'
 #' @param obj \[R `object`\] Any object, specifically data or results of
 #' previous pipes.
@@ -345,6 +347,7 @@ conserve <- function(obj, name) {
 #' `instructions`.
 #'
 #' @export
+#' @rdname pipem-operator
 `%->%` <- function(obj, instructions) {
     instructions <- rlang::enquo(instructions)
     instructions_env <- rlang::quo_get_env(instructions)

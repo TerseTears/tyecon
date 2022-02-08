@@ -21,6 +21,7 @@ library(rlang)
 library(purrr)
 library(stringr)
 library(tibble)
+library(dplyr)
 ```
 
 # The `convoke` Function
@@ -82,6 +83,20 @@ mymean(mydf, "x", 0.1, interface = "mean", mean.na.rm=T)
 
 Nevertheless, the ultimate goal is to specify a DSL by which the package author can convert its functions to a unified interface by only specifying some general rules (in a text file bundled with the package for instance). This would allow the package author to separate the need to conform with a unified interface from writing the packages however is seen best.
 Nevertheless, hard-codded values can't be changed or passed down obviously, and would still require upstream fixes.
+
+# The `%->%` *pipem* Operator
+
+<!-- TODO come up with better example here -->
+
+This operator facilitates chaining instructions without explicitly writing the `magrittr` pipe. Additionally, it allows for intermediate values to be kept and used later down the chain of instructions. For instance, consider the case where we want to compute `abs(vec^3) * (sum(vec^2) + 1)` sequentially, instead of using a single function:
+
+```{r}
+c(-4, 9, -3, 12) %->% {
+    (function(x) {x^2})()
+    vec2
+    (function(x) {abs(x^3) + sum(vec2) + 1})()
+}
+```
 
 # The `%to%` Operator
 

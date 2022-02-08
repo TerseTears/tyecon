@@ -16,20 +16,6 @@ convoked <- convoke(list(a, b),
 c(convoked(9,5, foo.round=FALSE), bar(5,9))
 c(convoked(9,5, foo.round=TRUE), round(bar(5,9)))
 
-# post-processing specification
-foo <- function(a1, b1) { a1/b1 }
-bar <- function(b2, a2) { a2/b2 }
-multfactor <- 2
-# convoked <- convoke(list(a, b), 
-#                    foo(a1 = a, b1 = b) ~ .*multfactor,
-#                    bar(b2 = b, a2 = a) ~ .*multfactor)
-# c(convoked(9,5), bar(5,9)*multfactor)
-# multfunc <- function(x) x*2
-# convoked <- convoke(list(a, b), 
-#                    foo(a1 = a, b1 = b) ~ multfunc(.),
-#                    bar(b2 = b, a2 = a) ~ multfunc(.))
-# c(convoked(9,5), bar(5,9)*multfactor)
-
 # TODO fix and show this for three sequences
 # adding further functions later
 foo <- function(a1, b1) { a1/b1 }

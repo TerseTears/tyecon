@@ -36,6 +36,24 @@ purrr::map(list(glm.model, lm.model), ~
            conflated_summary(., lm.symbolic.cor = TRUE))
 ```
 
+### `%->%` pipem operator
+
+With this operator, it is possible to chain instructions while also keeping any of the intermediate values. The syntax also omits the recurrent extraneous `magrittr` pipes at the end:
+
+```r
+testdf <- tibble::tribble(~x, ~y,
+                  1, 2,
+                  5, 9,
+                  12, 8)
+testdf %->% {
+    dplyr::mutate(x2 = x^2)
+    dplyr::mutate(x3 = x^3)
+    somedf
+    dplyr::mutate(x4 = x2^2)
+    dplyr::mutate(x6 = (somedf$x2)^3)
+}
+```
+
 ### `%to%` operator
 
 As for the `%to%` operator, it is more of a convenience function, omitting the process of having to build a named vector of directives, then pass it to something like `purrr::map` just to get the results of applying various functions to the same object. Nevertheless, this is often the need of any data analysis task. For instance, once a linear regression model is built, one might need to extract the various parts of the result of `summary(lm.model)`. The `%to%` operator allows this with concise syntax:
