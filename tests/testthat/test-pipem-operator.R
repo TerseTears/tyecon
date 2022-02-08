@@ -7,6 +7,7 @@ testdf <- tibble::tribble(~x, ~y,
                   5, 9,
                   12, 8)
 
+
 test_that("simple piping works", {
     expect_equal(
         testvec %->% {
@@ -31,6 +32,34 @@ test_that("intermediary variables work", {
             (function(x) x+5)()
             (function(x) x*sum(vec2))()
         }, sum(testvec^2) * (testvec^2 + 5))
+})
+
+# This extra test is needed due to the lazy evaluation nature of R
+test_that("standalone intermediary variable work", {
+    expect_equal(
+        testvec %->% {
+            (function(x) x + 2)()
+            testvec2
+            (function(x) {testvec2})()
+        }, testvec + 2)
+})
+
+# TODO test that intermediary variable has local scope
+test_that("intermediary variables work", {
+        retvalue <- testvec %->% {
+            (function(x) x^2)()
+            vec2
+            (function(x) x+5)()
+            (function(x) x*sum(vec2))()
+        }
+        expect_error(vec2, "not found")
+        testvec %->% {
+            (function(x) x^2)()
+            vec3
+            (function(x) x+5)()
+            (function(x) vec3)()
+        }
+        expect_error(vec3, "not found")
 })
 
 test_that("data masks work", {

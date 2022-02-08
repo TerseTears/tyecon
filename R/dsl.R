@@ -302,7 +302,7 @@ conserve <- function(obj, name) {
     # TODO there should be a simpler way than below to captures symbols in rlang
     rlang::local_bindings(
         !!!rlang::set_names(list(obj), rlang::as_name(rlang::enquo(name))),
-        .frame = rlang::env_parent(rlang::caller_env()))
+        .frame = rlang::caller_env())
     return(name)
 }
 
@@ -355,7 +355,7 @@ conserve <- function(obj, name) {
     instructions_expr <- purrr::modify_if(instructions_expr, rlang::is_symbol,
         ~rlang::expr(conserve(!!.)))
     rlang::eval_tidy(
-        purrr::reduce(instructions_expr, ~ rlang::expr(!!.x %>% !!.y),
+        purrr::reduce(instructions_expr, ~ rlang::expr(!!.x %!>% !!.y),
             .init = rlang::expr(!!obj)),
         env = instructions_env)
 }
