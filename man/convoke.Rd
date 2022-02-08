@@ -4,13 +4,12 @@
 \alias{convoke}
 \title{Unify function interfaces}
 \usage{
-convoke(uniface, ...)
+convoke(argslist, ...)
 }
 \arguments{
-\item{uniface}{[\code{function}] The desired unifying interface. Function returning
-a string as description}
+\item{argslist}{[\code{list}] The desired unifying arguments. A list call.}
 
-\item{...}{[\code{function} ~ \code{purrr_lambda}] All the various specifications for function argument
+\item{...}{[\code{function}] All the various specifications for function argument
 transformations.}
 }
 \value{
@@ -29,34 +28,23 @@ changing the respective argument in the generated function.
 \section{Unifying Functions}{
 \subsection{Specifying the unifying interface}{
 
-The unifying interface needs to be specified in the format\preformatted{\\(arg1 = default1, arg2 = default2, etc.) "description"
+The unifying interface needs to be specified as arglist for the new function\preformatted{list(arg1 = default1, arg2 = default2, etc.)
 }
-
-This uses R's recent anonymous function syntax.
 }
 
 \subsection{Specifying function argument transformations}{
 
-Transformations follow the formula format\preformatted{func1(func1arg1 = transformed_arg1, func1arg2 = transformed_arg2) ~
-postprocess(result)
+Transformations follows the function specification format\preformatted{func1(func1arg1 = transformed_arg1, func1arg2 = transformed_arg2)
 }
 
 Essentially, pass the function as if it is to take
 arguments from the unified function.
-\subsection{Postprocessing function}{
-
-The postprocess function on the right of the formula specifies what
-postprocessing is required on the result of applying \code{func1}. It is to be
-specified similarly to how functions in \code{purrr::map} are specified (that is
-by the \code{.} and \code{.x} syntax.
-}
-
 }
 }
 
 \section{Composing functions}{
 It is also possible to progressively add functions to a convoke function
-simply by adding to the convoke function the new specifications:\preformatted{convoke_func + (func_spec ~ postfunc)
+simply by adding to the convoke function the new specifications:\preformatted{convoke_func + ~func_spec
 }
 }
 
@@ -64,43 +52,28 @@ simply by adding to the convoke function the new specifications:\preformatted{co
 # unifying functions with swapped arguments
 foo <- function(a1, b1) { a1/b1 }
 bar <- function(b2, a2) { a2/b2 }
-convoked <- convoke(\(a, b) "",
-                   foo(a1 = a, b1 = b) ~ .,
-                   bar(b2 = b, a2 = a) ~ .)
+convoked <- convoke(list(a, b),
+                   foo(a1 = a, b1 = b),
+                   bar(b2 = b, a2 = a))
 c(convoked(9,5), bar(5,9))
 c(convoked(9,5,interface="bar"), foo(9,5))
 
 # supplying optional arguments
 foo <- function(a1, b1, round=FALSE) { if(round) round(a1/b1) else a1/b1 }
 bar <- function(b2, a2) { a2/b2 }
-convoked <- convoke(\(a, b) "",
-                   foo(a1 = a, b1 = b) ~ .,
-                   bar(b2 = b, a2 = a) ~ .)
+convoked <- convoke(list(a, b),
+                   foo(a1 = a, b1 = b),
+                   bar(b2 = b, a2 = a))
 c(convoked(9,5, foo.round=FALSE), bar(5,9))
 c(convoked(9,5, foo.round=TRUE), round(bar(5,9)))
 
-# post-processing specification
-foo <- function(a1, b1) { a1/b1 }
-bar <- function(b2, a2) { a2/b2 }
-multfactor <- 2
-convoked <- convoke(\(a, b) "", 
-                   foo(a1 = a, b1 = b) ~ .*multfactor,
-                   bar(b2 = b, a2 = a) ~ .*multfactor)
-c(convoked(9,5), bar(5,9)*multfactor)
-multfunc <- function(x) x*2
-convoked <- convoke(\(a, b) "", 
-                   foo(a1 = a, b1 = b) ~ multfunc(.),
-                   bar(b2 = b, a2 = a) ~ multfunc(.))
-c(convoked(9,5), bar(5,9)*multfactor)
-
+# TODO fix and show this for three sequences
 # adding further functions later
 foo <- function(a1, b1) { a1/b1 }
 bar <- function(b2, a2) { a2/b2 }
-baz <- function(a3, b3) { a3/b3 }
-(convoked <- convoke(\(a, b) "", foo(a1 = a, b1 = b) ~ .))
-(convoked <- convoked + (bar(b2 = b, a2 = a) ~ .) +
-    (baz(a3 = a, b3 = b) ~ .))
-c(convoked(9,5, interface="baz"), bar(5,9))
+(convoked <- convoke(list(a, b), foo(a1 = a, b1 = b)))
+(convoked <- convoked + ~bar(b2 = b, a2 = a))
+c(convoked(9,5, interface="bar"), foo(5,9))
 }
 \seealso{
 Other function assemblers: 

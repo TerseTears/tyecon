@@ -62,4 +62,9 @@ testvec \%to\% {
     itsextra ~ c(2,.)
 }
 }
+\seealso{
+Other result assemblers: 
+\code{\link{\%->\%}()},
+\code{\link{conserve}()}
+}
 \concept{result assemblers}

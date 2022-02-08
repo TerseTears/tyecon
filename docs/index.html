@@ -28,6 +28,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -40,18 +42,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tyecon</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -76,7 +72,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/TerseTears/tyecon/">
+  <a href="https://github.com/TerseTears/tyecon/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -93,74 +89,92 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="tyecon-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#tyecon-" class="anchor"></a>tyecon <img src="reference/figures/logo.svg" align="right" height="139">
+<div class="section level1">
+<div class="page-header"><h1 id="tyecon-">tyecon <img src="reference/figures/logo.svg" align="right" height="139"><a class="anchor" aria-label="anchor" href="#tyecon-"></a>
 </h1></div>
 <p>A utility package presently aimed at making assembling functions and results easier and quicker.</p>
 <p>The ultimate goal of the package is to act as an API, for model builders and package writers, to make their functions more easily accessible without having to do rewrites themselves.</p>
-<div id="examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h2>
-<div id="convoke" class="section level3">
-<h3 class="hasAnchor">
-<a href="#convoke" class="anchor"></a><code>convoke</code>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h2>
+<div class="section level3">
+<h3 id="convoke">
+<code>convoke</code><a class="anchor" aria-label="anchor" href="#convoke"></a>
 </h3>
 <p>Consider two functions with swapped arguments that we would want to use together without the hassle of writing multiple lines of code, storing the functions in lists, storing results in different variables etc. We just want to be able to change the “interface” with a simple argument:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">foo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">a1</span>, <span class="va">b1</span><span class="op">)</span> <span class="op">{</span> <span class="va">a1</span><span class="op">/</span><span class="va">b1</span> <span class="op">}</span>
 <span class="va">bar</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">b2</span>, <span class="va">a2</span><span class="op">)</span> <span class="op">{</span> <span class="va">a2</span><span class="op">/</span><span class="va">b2</span> <span class="op">}</span>
-<span class="va">convoked</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/convoke.html">convoke</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span> <span class="st">"unifying swapped arguments"</span>,
-                   <span class="fu">foo</span><span class="op">(</span>a1 <span class="op">=</span> <span class="va">a</span>, b1 <span class="op">=</span> <span class="va">b</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,
-                   <span class="fu"><a href="https://rdrr.io/r/grDevices/plotmath.html">bar</a></span><span class="op">(</span>b2 <span class="op">=</span> <span class="va">b</span>, a2 <span class="op">=</span> <span class="va">a</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span><span class="op">)</span>
-<span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dfr</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html">set_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"foo"</span>, <span class="st">"bar"</span><span class="op">)</span><span class="op">)</span>,
+<span class="va">convoked</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/convoke.html">convoke</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span>,
+                   <span class="fu">foo</span><span class="op">(</span>a1 <span class="op">=</span> <span class="va">a</span>, b1 <span class="op">=</span> <span class="va">b</span><span class="op">)</span>,
+                   <span class="fu"><a href="https://rdrr.io/r/grDevices/plotmath.html" class="external-link">bar</a></span><span class="op">(</span>b2 <span class="op">=</span> <span class="va">b</span>, a2 <span class="op">=</span> <span class="va">a</span><span class="op">)</span><span class="op">)</span>
+<span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dfr</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html" class="external-link">set_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"foo"</span>, <span class="st">"bar"</span><span class="op">)</span><span class="op">)</span>,
               <span class="op">~</span> <span class="fu">convoked</span><span class="op">(</span><span class="fl">3</span>,<span class="fl">9</span>, interface <span class="op">=</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Which would return the result of each function as a dataframe column value. Storing the functions in lists or as anonymous functions would have quickly become rather verbose, especially when one needs to supply different arguments at different stages of a model-building script for instance. Consult <code>convoke</code> examples and the vignettes for further information on the facilities of <code>convoke</code>.</p>
 </div>
-<div id="conflate" class="section level3">
-<h3 class="hasAnchor">
-<a href="#conflate" class="anchor"></a><code>conflate</code>
+<div class="section level3">
+<h3 id="conflate">
+<code>conflate</code><a class="anchor" aria-label="anchor" href="#conflate"></a>
 </h3>
-<p>Another issue is when one tries to use multiple generic methods together, yet each method comes with additional possible arguments. The <code>conflate</code> function allows one to supply all said arguments in one place (useful in <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code>, etc.):</p>
+<p>Another issue is when one tries to use multiple generic methods together, yet each method comes with additional possible arguments. The <code>conflate</code> function allows one to supply all said arguments in one place (useful in <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate</a></code>, etc.):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">glm.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
-<span class="va">lm.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
-<span class="op">(</span><span class="va">conflated_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/conflate.html">conflate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">x</span>, correlation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">glm.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
+<span class="va">lm.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
+<span class="op">(</span><span class="va">conflated_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/conflate.html">conflate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span>, correlation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">glm.model</span>, <span class="va">lm.model</span><span class="op">)</span>, <span class="op">~</span> 
+<span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">glm.model</span>, <span class="va">lm.model</span><span class="op">)</span>, <span class="op">~</span> 
            <span class="fu">conflated_summary</span><span class="op">(</span><span class="va">.</span>, lm.symbolic.cor <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="to-operator" class="section level3">
-<h3 class="hasAnchor">
-<a href="#to-operator" class="anchor"></a><code>%to%</code> operator</h3>
-<p>As for the <code>%to%</code> operator, it is more of a convenience function, omitting the process of having to build a named vector of directives, then pass it to something like <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map</a></code> just to get the results of applying various functions to the same object. Nevertheless, this is often the need of any data analysis task. For instance, once a linear regression model is built, one might need to extract the various parts of the result of <code>summary(lm.model)</code>. The <code>%to%</code> operator allows this with concise syntax:</p>
+<div class="section level3">
+<h3 id="--pipem-operator">
+<code>%-&gt;%</code> pipem operator<a class="anchor" aria-label="anchor" href="#--pipem-operator"></a>
+</h3>
+<p>With this operator, it is possible to chain instructions while also keeping any of the intermediate values. The syntax also omits the recurrent extraneous <code>magrittr</code> pipes at the end:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">lm.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Sepal.Width</span> <span class="op">~</span> <span class="va">Sepal.Length</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">lm.model</span><span class="op">)</span> <span class="op"><a href="reference/%to%.html">%to%</a></span> <span class="op">{</span>
+<code class="sourceCode R"><span class="va">testdf</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span><span class="op">~</span><span class="va">x</span>, <span class="op">~</span><span class="va">y</span>,
+                  <span class="fl">1</span>, <span class="fl">2</span>,
+                  <span class="fl">5</span>, <span class="fl">9</span>,
+                  <span class="fl">12</span>, <span class="fl">8</span><span class="op">)</span>
+<span class="va">testdf</span> <span class="op"><a href="reference/pipem-operator.html">%-&gt;%</a></span> <span class="op">{</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x2 <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x3 <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span>
+    <span class="va">somedf</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x4 <span class="op">=</span> <span class="va">x2</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x6 <span class="op">=</span> <span class="op">(</span><span class="va">somedf</span><span class="op">$</span><span class="va">x2</span><span class="op">)</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="to-operator">
+<code>%to%</code> operator<a class="anchor" aria-label="anchor" href="#to-operator"></a>
+</h3>
+<p>As for the <code>%to%</code> operator, it is more of a convenience function, omitting the process of having to build a named vector of directives, then pass it to something like <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map</a></code> just to get the results of applying various functions to the same object. Nevertheless, this is often the need of any data analysis task. For instance, once a linear regression model is built, one might need to extract the various parts of the result of <code>summary(lm.model)</code>. The <code>%to%</code> operator allows this with concise syntax:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Width</span> <span class="op">~</span> <span class="va">Sepal.Length</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lm.model</span><span class="op">)</span> <span class="op"><a href="reference/to-operator.html">%to%</a></span> <span class="op">{</span>
     <span class="va">res.std.err</span> <span class="op">~</span> <span class="va">.</span><span class="op">$</span><span class="va">sigma</span>
     <span class="va">dfs</span> <span class="op">~</span> <span class="va">.</span><span class="op">$</span><span class="va">df</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>
-    <span class="va">pval</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[</span>,<span class="st">"Pr(&gt;|t|)"</span><span class="op">]</span>
+    <span class="va">pval</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[</span>,<span class="st">"Pr(&gt;|t|)"</span><span class="op">]</span>
     <span class="va">fstat</span> <span class="op">~</span> <span class="va">.</span><span class="op">$</span><span class="va">fstatistic</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
     <span class="va">terms</span> <span class="op">~</span> <span class="va">.</span><span class="op">$</span><span class="va">terms</span>
 <span class="op">}</span></code></pre></div>
 <p>Which again, returns the results in a single dataframe row with column names being the name of each directive.</p>
 </div>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>The package still has a long way to go. Nevertheless, if you want to try it for yourself, here is the instruction:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install remotes package if not installed</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
 <span class="co"># install tyecon using the remotes package</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"TerseTears/tyecon"</span><span class="op">)</span></code></pre></div>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"TerseTears/tyecon"</span><span class="op">)</span></code></pre></div>
 <p>I am somewhat uncertain of the present limits of the package since there are many ways to write a function in R. Therefore, if you do write a function that doesn’t behave well with <code>convoke</code> please do open an issue.</p>
 <p>To uninstall the package, run the usual <code>remove.packages</code> command.</p>
 </div>
-<div id="main-idea" class="section level2">
-<h2 class="hasAnchor">
-<a href="#main-idea" class="anchor"></a>Main Idea</h2>
+<div class="section level2">
+<h2 id="main-idea">Main Idea<a class="anchor" aria-label="anchor" href="#main-idea"></a>
+</h2>
 <p>Use a single interface, text-based, to convert all argument calls to a unified method, essentially making all packages accessible from a unified interface. This is without the need to write separate APIs as package itself. Authors will be able to specify in a single file, how their functions map to the unified interface provided by <code>tyecon</code> or suggested by the community for instance.</p>
 <p>The package’s DSL should be able to unify all the below cases</p>
 <ul class="task-list">
@@ -175,9 +189,9 @@ functions lacking an argument</li>
 functions having extra arguments</li>
 </ul>
 </div>
-<div id="pending-tasks" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pending-tasks" class="anchor"></a>Pending Tasks</h2>
+<div class="section level2">
+<h2 id="pending-tasks">Pending Tasks<a class="anchor" aria-label="anchor" href="#pending-tasks"></a>
+</h2>
 <ul class="task-list">
 <li>
 <input type="checkbox" disabled checked>
@@ -220,12 +234,12 @@ TODO Use <code>parsnip</code> and <code>broom</code> themselves to write the uni
 TODO Write tests for conflate</li>
 <li>
 <input type="checkbox" disabled>
-TODO QoL allow supplying custom arguments with <code><a href="https://rdrr.io/r/base/c.html">c()</a></code>, e.g. <code>stan_glm = c(chains=5, iter=500)</code>.</li>
+TODO QoL allow supplying custom arguments with <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>, e.g. <code>stan_glm = c(chains=5, iter=500)</code>.</li>
 </ul>
 </div>
-<div id="license" class="section level2">
-<h2 class="hasAnchor">
-<a href="#license" class="anchor"></a>License</h2>
+<div class="section level2">
+<h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
+</h2>
 <p>MIT</p>
 </div>
 </div>
@@ -233,38 +247,50 @@ TODO QoL allow supplying custom arguments with <code><a href="https://rdrr.io/r/
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/TerseTears/tyecon/">https://​github.com/​TerseTears/​tyecon/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/TerseTears/tyecon/issues">https://​github.com/​TerseTears/​tyecon/​issues</a>
-</li>
+<li><a href="https://github.com/TerseTears/tyecon/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/TerseTears/tyecon/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing tyecon</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>TerseTears <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
 </div>
+
+
 
   </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by TerseTears.</p>
+  <p></p>
+<p>Developed by TerseTears.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -272,6 +298,8 @@ TODO QoL allow supplying custom arguments with <code><a href="https://rdrr.io/r/
 
   
 
+
+  
 
   </body>
 </html>

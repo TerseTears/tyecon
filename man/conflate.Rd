@@ -7,7 +7,7 @@
 conflate(generic_spec)
 }
 \arguments{
-\item{`generic_spec`}{[\code{call}] Generic function as applied to arguments
+\item{generic_spec}{[\code{call}] Generic function as applied to arguments
 shared between all methods to be combined.}
 }
 \value{

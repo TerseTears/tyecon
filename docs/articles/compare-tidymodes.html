@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,18 +40,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tyecon</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -74,7 +70,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/TerseTears/tyecon/">
+  <a href="https://github.com/TerseTears/tyecon/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -89,13 +85,13 @@
 
       
 
-      </header><script src="compare-tidymodes_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Fitting Models <em>Without</em> parsnip</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/TerseTears/tyecon/blob/master/vignettes/compare-tidymodes.Rmd"><code>vignettes/compare-tidymodes.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/TerseTears/tyecon/blob/HEAD/R/vignettes/compare-tidymodes.Rmd" class="external-link"><code>R/vignettes/compare-tidymodes.Rmd</code></a></small>
       <div class="hidden name"><code>compare-tidymodes.Rmd</code></div>
 
     </div>
@@ -103,78 +99,78 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bbolker/broom.mixed">broom.mixed</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tersetears.github.io/tyecon/">tyecon</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">ames</span><span class="op">)</span></code></pre></div>
-<div id="fitting-models-without-parsnip" class="section level1">
-<h1 class="hasAnchor">
-<a href="#fitting-models-without-parsnip" class="anchor"></a>Fitting Models Without parsnip</h1>
-<p>This vignette shows how we can achieve the same (if not better) consistency of using multiple models together without the need for packages such as <code>parsnip</code> or <code>broom</code>. Original article which uses these two packages can be found in the tidymodels book, <a href="https://www.tmwr.org/models.html">here</a>.</p>
-<div id="the-linear-functions-family" class="section level2">
-<h2 class="hasAnchor">
-<a href="#the-linear-functions-family" class="anchor"></a>The linear functions family</h2>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bbolker/broom.mixed" class="external-link">broom.mixed</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tersetears.github.io/tyecon/" class="external-link">tyecon</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ames</span><span class="op">)</span></code></pre></div>
+<div class="section level2">
+<h2 id="fitting-models-without-parsnip">Fitting Models Without parsnip<a class="anchor" aria-label="anchor" href="#fitting-models-without-parsnip"></a>
+</h2>
+<p>This vignette shows how we can achieve the same (if not better) consistency of using multiple models together without the need for packages such as <code>parsnip</code> or <code>broom</code>. Original article which uses these two packages can be found in the tidymodels book, <a href="https://www.tmwr.org/models.html" class="external-link">here</a>.</p>
+<div class="section level3">
+<h3 id="the-linear-functions-family">The linear functions family<a class="anchor" aria-label="anchor" href="#the-linear-functions-family"></a>
+</h3>
 <p>To build this family, we simply encapsulate the three <code>lm</code>, <code>stan_glm</code>, and <code>glmnet</code> functions together, using <code><a href="../reference/convoke.html">tyecon::convoke</a></code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstanarm/">rstanarm</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://glmnet.stanford.edu">glmnet</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstanarm/" class="external-link">rstanarm</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glmnet.stanford.edu" class="external-link">glmnet</a></span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ames_split</span> <span class="op">&lt;-</span> <span class="fu">initial_split</span><span class="op">(</span><span class="va">ames</span>, prop <span class="op">=</span> <span class="fl">0.80</span><span class="op">)</span>
 <span class="va">ames_train</span> <span class="op">&lt;-</span> <span class="fu">training</span><span class="op">(</span><span class="va">ames_split</span><span class="op">)</span></code></pre></div>
 <p>First, we unify the models:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="va">linear_model</span> <span class="op">&lt;-</span>
-    <span class="fu"><a href="../reference/convoke.html">convoke</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">formula</span>, <span class="va">data</span><span class="op">)</span> <span class="st">"unifying linear models"</span>,
-            <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">formula</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,
-            <span class="fu"><a href="https://mc-stan.org/rstanarm/reference/stan_glm.html">stan_glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">formula</span>, data <span class="op">=</span> <span class="va">data</span>, mean_PPD <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>,
-            <span class="fu"><a href="https://rdrr.io/pkg/glmnet/man/glmnet.html">glmnet</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.frame.html">model.frame</a></span><span class="op">(</span><span class="va">formula</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
-                   y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.frame.html">model.frame</a></span><span class="op">(</span><span class="va">formula</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; convoke function unifying linear models</span>
+    <span class="fu"><a href="../reference/convoke.html">convoke</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">formula</span>, <span class="va">data</span><span class="op">)</span>,
+            <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">formula</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span>,
+            <span class="fu"><a href="https://mc-stan.org/rstanarm/reference/stan_glm.html" class="external-link">stan_glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">formula</span>, data <span class="op">=</span> <span class="va">data</span>, mean_PPD <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+            <span class="fu"><a href="https://rdrr.io/pkg/glmnet/man/glmnet.html" class="external-link">glmnet</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.frame.html" class="external-link">model.frame</a></span><span class="op">(</span><span class="va">formula</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
+                   y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.frame.html" class="external-link">model.frame</a></span><span class="op">(</span><span class="va">formula</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; convoke function</span>
 <span class="co">#&gt;   interfaces: lm(), stan_glm(), glmnet()</span>
 <span class="co">#&gt;   args: formula, data, interface = lm, interface.args</span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model_results</span> <span class="op">&lt;-</span> <span class="fu">enframe</span><span class="op">(</span><span class="fu">map</span><span class="op">(</span><span class="fu">set_names</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">linear_model</span><span class="op">)</span><span class="op">)</span>, <span class="op">~</span>
+<code class="sourceCode R"><span class="va">model_results</span> <span class="op">&lt;-</span> <span class="fu">enframe</span><span class="op">(</span><span class="fu">map</span><span class="op">(</span><span class="fu">set_names</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">linear_model</span><span class="op">)</span><span class="op">)</span>, <span class="op">~</span>
     <span class="fu">linear_model</span><span class="op">(</span><span class="va">Sale_Price</span> <span class="op">~</span> <span class="va">Longitude</span> <span class="op">+</span> <span class="va">Latitude</span>, <span class="va">ames_train</span>, interface <span class="op">=</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span>,
-    <span class="st">"modelname"</span>, <span class="st">"model"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">rowwise</span></code></pre></div>
+    <span class="st">"modelname"</span>, <span class="st">"model"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="va">rowwise</span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="va">model_results</span> <span class="op">&lt;-</span> <span class="fu">mutate</span><span class="op">(</span><span class="va">model_results</span>, vcov_val <span class="op">=</span>
-                         <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu">possibly</span><span class="op">(</span><span class="va">vcov</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 3 × 3</span>
-<span class="co">#&gt; # Rowwise: </span>
+                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">possibly</span><span class="op">(</span><span class="va">vcov</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># Rowwise: </span></span>
 <span class="co">#&gt;   modelname model     vcov_val     </span>
-<span class="co">#&gt;   &lt;chr&gt;     &lt;list&gt;    &lt;list&gt;       </span>
-<span class="co">#&gt; 1 lm        &lt;lm&gt;      &lt;dbl [3 × 3]&gt;</span>
-<span class="co">#&gt; 2 stan_glm  &lt;stanreg&gt; &lt;dbl [3 × 3]&gt;</span>
-<span class="co">#&gt; 3 glmnet    &lt;elnet&gt;   &lt;NULL&gt;</span></code></pre></div>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> lm        <span style="color: #949494;">&lt;lm&gt;</span>      <span style="color: #949494;">&lt;dbl [3 × 3]&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> stan_glm  <span style="color: #949494;">&lt;stanreg&gt;</span> <span style="color: #949494;">&lt;dbl [3 × 3]&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> glmnet    <span style="color: #949494;">&lt;elnet&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span></span></code></pre></div>
 <p>Now we’d want to see the coefficients, possibly alongside some other information. In fact, we may want to know a lot more about each model as well.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="va">model_results</span> <span class="op">&lt;-</span> <span class="fu">mutate</span><span class="op">(</span><span class="va">model_results</span>, coef_val <span class="op">=</span>
-                         <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu">possibly</span><span class="op">(</span><span class="va">coef</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 3 × 4</span>
-<span class="co">#&gt; # Rowwise: </span>
+                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">possibly</span><span class="op">(</span><span class="va">coef</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># Rowwise: </span></span>
 <span class="co">#&gt;   modelname model     vcov_val      coef_val       </span>
-<span class="co">#&gt;   &lt;chr&gt;     &lt;list&gt;    &lt;list&gt;        &lt;list&gt;         </span>
-<span class="co">#&gt; 1 lm        &lt;lm&gt;      &lt;dbl [3 × 3]&gt; &lt;dbl [3]&gt;      </span>
-<span class="co">#&gt; 2 stan_glm  &lt;stanreg&gt; &lt;dbl [3 × 3]&gt; &lt;dbl [3]&gt;      </span>
-<span class="co">#&gt; 3 glmnet    &lt;elnet&gt;   &lt;NULL&gt;        &lt;dgCMatrx[,55]&gt;</span></code></pre></div>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>         </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> lm        <span style="color: #949494;">&lt;lm&gt;</span>      <span style="color: #949494;">&lt;dbl [3 × 3]&gt;</span> <span style="color: #949494;">&lt;dbl [3]&gt;</span>      </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> stan_glm  <span style="color: #949494;">&lt;stanreg&gt;</span> <span style="color: #949494;">&lt;dbl [3 × 3]&gt;</span> <span style="color: #949494;">&lt;dbl [3]&gt;</span>      </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> glmnet    <span style="color: #949494;">&lt;elnet&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>        <span style="color: #949494;">&lt;dgCMatrx[,56]&gt;</span></span></code></pre></div>
 <p>We can also store the tidy variant:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="va">model_results</span> <span class="op">&lt;-</span> <span class="fu">mutate</span><span class="op">(</span><span class="va">model_results</span>, tidy_val <span class="op">=</span>
-                         <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu">possibly</span><span class="op">(</span><span class="va">tidy</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 3 × 5</span>
-<span class="co">#&gt; # Rowwise: </span>
+                         <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">possibly</span><span class="op">(</span><span class="va">tidy</span>, <span class="cn">NULL</span><span class="op">)</span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 5</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># Rowwise: </span></span>
 <span class="co">#&gt;   modelname model     vcov_val      coef_val        tidy_val          </span>
-<span class="co">#&gt;   &lt;chr&gt;     &lt;list&gt;    &lt;list&gt;        &lt;list&gt;          &lt;list&gt;            </span>
-<span class="co">#&gt; 1 lm        &lt;lm&gt;      &lt;dbl [3 × 3]&gt; &lt;dbl [3]&gt;       &lt;tibble [3 × 5]&gt;  </span>
-<span class="co">#&gt; 2 stan_glm  &lt;stanreg&gt; &lt;dbl [3 × 3]&gt; &lt;dbl [3]&gt;       &lt;tibble [3 × 3]&gt;  </span>
-<span class="co">#&gt; 3 glmnet    &lt;elnet&gt;   &lt;NULL&gt;        &lt;dgCMatrx[,55]&gt; &lt;tibble [162 × 5]&gt;</span></code></pre></div>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> lm        <span style="color: #949494;">&lt;lm&gt;</span>      <span style="color: #949494;">&lt;dbl [3 × 3]&gt;</span> <span style="color: #949494;">&lt;dbl [3]&gt;</span>       <span style="color: #949494;">&lt;tibble [3 × 5]&gt;</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> stan_glm  <span style="color: #949494;">&lt;stanreg&gt;</span> <span style="color: #949494;">&lt;dbl [3 × 3]&gt;</span> <span style="color: #949494;">&lt;dbl [3]&gt;</span>       <span style="color: #949494;">&lt;tibble [3 × 3]&gt;</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> glmnet    <span style="color: #949494;">&lt;elnet&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>        <span style="color: #949494;">&lt;dgCMatrx[,56]&gt;</span> <span style="color: #949494;">&lt;tibble [165 × 5]&gt;</span></span></code></pre></div>
 <p>We can also plot the results rather easily. First, let us make a unified plot function using <code>conflate</code>, as <code>plot</code> is simply a generic function:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">conflated_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/conflate.html">conflate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="op">(</span><span class="va">conflated_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/conflate.html">conflate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; conflate function for plot</span>
 <span class="co">#&gt;   args: x, object.args</span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>
 <span class="fu">walk</span><span class="op">(</span><span class="fu">pull</span><span class="op">(</span><span class="va">model_results</span>, <span class="va">model</span><span class="op">)</span>, <span class="op">~</span>
     <span class="fu">conflated_plot</span><span class="op">(</span><span class="va">.</span>, lm.ask <span class="op">=</span> <span class="cn">FALSE</span>, lm.which <span class="op">=</span> <span class="fl">1</span>,
                    elnet.xvar <span class="op">=</span> <span class="st">"dev"</span>, stanreg.plotfun <span class="op">=</span> <span class="st">"hist"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -193,11 +189,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by TerseTears.</p>
+  <p></p>
+<p>Developed by TerseTears.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -205,6 +203,8 @@
 
   
 
+
+  
 
   </body>
 </html>
