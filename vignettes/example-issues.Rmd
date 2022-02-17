@@ -93,10 +93,14 @@ This operator facilitates chaining instructions without explicitly writing the `
 ```{r}
 c(-4, 9, -3, 12) %->% {
     (function(x) {x^2})()
-    vec2
+    vec2 <- .
     (function(x) {abs(x^3) + sum(vec2) + 1})()
 }
 ```
+
+Another convenience of this operator is that one can simply comment out the remaining lines for debugging purposes, without having to write an extra `identity()` for instance.
+
+Note that since the operator treats symbols specially, functions with single arguments should be in the form `func()` and not just `func`. This is a best practice in the original `magrittr` pipe as well in any case.
 
 # The `%to%` Operator
 

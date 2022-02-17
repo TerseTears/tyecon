@@ -48,9 +48,9 @@ testdf <- tibble::tribble(~x, ~y,
 testdf %->% {
     dplyr::mutate(x2 = x^2)
     dplyr::mutate(x3 = x^3)
-    somedf
+    colx2 <- x2
     dplyr::mutate(x4 = x2^2)
-    dplyr::mutate(x6 = (somedf$x2)^3)
+    dplyr::mutate(x6 = (colx2)^3)
 }
 ```
 
@@ -96,11 +96,15 @@ The package's DSL should be able to unify all the below cases
 - [x] functions lacking an argument
 * [x] functions having extra arguments
 
+## Name
+
+The idea of the package was originally to facilitate tasks common to econometrics, hence "**t**id**y** **econ**ometrics"" (other abbreviations didn't look as good). Nevertheless, I quickly realized that the problems where largely common with general data analysis tasks, yet the name remained. Now, it can be considered "tidy *con*" functions, functions that facilitate joint operations with conciser statements.
+
 ## Pending Tasks
 
 * [x] Need to add examples and documentation
 * [x] Need to add tests somehow (tricky, since working with language constructs themselves)
-* [ ] TODO QoL Need to make dsl nicer, remove unintuitive interfaces by wrapping functions (e.g. currently, need ..() in convoke)
+* [x] TODO QoL Need to make dsl nicer, remove unintuitive interfaces by wrapping functions (e.g. currently, need ..() in convoke)
 * [x] Better errors when things fail
 * [x] There should be a way to compose expressions. That is, instead of having just one function that takes all functions to unify at the same time, the function can be applied individually and then each individual component can be be composed into the general function. This helps the API building part, since we'd want to let package developers add their own interfaces based on a standard, and then for the user to use all of them.
 * [x] Still need a nice interface for post-processing of the result, so as to make the output the same as well. Pretty essential component...
@@ -108,10 +112,11 @@ The package's DSL should be able to unify all the below cases
 * [x] Modify printing of `convoke` functions as well and include list of functions and arguments or something.
 * [ ] TODO Need to decide on how to read function argument transformations from a file and what file format (likely yaml) to use for this purpose.
 * [ ] TODO Need to decide on coupling or decoupling of standard interfaces with the project. Preference being decoupling and keeping the package as general as possible.
-* [ ] TODO Post-processing part seems unnecessary in most cases as we'd need the whole object most times. Replace it with optional post-processing and abandon formula syntax.
+* [x] TODO Post-processing part seems unnecessary in most cases as we'd need the whole object most times. Replace it with optional post-processing and abandon formula syntax.
 * [ ] TODO Use `parsnip` and `broom` themselves to write the unifying interface specifications.
 * [ ] TODO Write tests for conflate
 * [ ] TODO QoL allow supplying custom arguments with `c()`, e.g. `stan_glm = c(chains=5, iter=500)`.
+* [ ] Instead of just one `pipem` operator, have a pipe that sort of broadcasts any other pipe by the `%>.%` syntax for instance. This would help ggplot. Or just do the same for ggplot `%+.%`. 
 
 ## License 
 

@@ -28,7 +28,7 @@ test_that("intermediary variables work", {
     expect_equal(
         testvec %->% {
             (function(x) x^2)()
-            vec2
+            vec2 <- .
             (function(x) x+5)()
             (function(x) x*sum(vec2))()
         }, sum(testvec^2) * (testvec^2 + 5))
@@ -39,7 +39,7 @@ test_that("standalone intermediary variable work", {
     expect_equal(
         testvec %->% {
             (function(x) x + 2)()
-            testvec2
+            testvec2 <- .
             (function(x) {testvec2})()
         }, testvec + 2)
 })
@@ -48,14 +48,14 @@ test_that("standalone intermediary variable work", {
 test_that("intermediary variables work", {
         retvalue <- testvec %->% {
             (function(x) x^2)()
-            vec2
+            vec2 <- .
             (function(x) x+5)()
             (function(x) x*sum(vec2))()
         }
         expect_error(vec2, "not found")
         testvec %->% {
             (function(x) x^2)()
-            vec3
+            vec3 <- .
             (function(x) x+5)()
             (function(x) vec3)()
         }
@@ -74,8 +74,39 @@ test_that("intermediary variables work in quasiquoting context", {
     expect_equal(
         testdf %->% {
             dplyr::mutate(x2 = x^2)
-            mydf
+            mydf <- .
             dplyr::mutate(x6 = (mydf$x2)^3)
+        }, testdf %>% dplyr::mutate(x2 = x^2) %>% dplyr::mutate(x6 = x2^3))
+})
+
+test_that("automatic column subsetting works", {
+    expect_equal(
+        testdf %->% {
+            dplyr::mutate(x2 = x^2)
+            myx2col <- x2
+            dplyr::mutate(x6 = (myx2col)^3)
+        }, testdf %>% dplyr::mutate(x2 = x^2) %>% dplyr::mutate(x6 = x2^3))
+})
+
+test_that("verbose column subsetting works", {
+    expect_equal(
+        testdf %->% {
+            dplyr::mutate(x2 = x^2)
+            myx2col <- .$x2
+            dplyr::mutate(x6 = (myx2col)^3)
+        }, testdf %>% dplyr::mutate(x2 = x^2) %>% dplyr::mutate(x6 = x2^3))
+})
+
+test_that("multiline assignment works", {
+    expect_equal(
+        testdf %->% {
+            dplyr::mutate(x2 = x^2)
+            myx2col <- {
+                smth <- x2
+                smthelse <- x2 * x
+                smthelse / x
+            }
+            dplyr::mutate(x6 = (myx2col)^3)
         }, testdf %>% dplyr::mutate(x2 = x^2) %>% dplyr::mutate(x6 = x2^3))
 })
 

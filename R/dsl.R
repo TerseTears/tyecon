@@ -298,7 +298,23 @@ print.conflate <- function(x, ...) {
 #' the specified `name`.
 #'
 #' @export
-conserve <- function(obj, name) {
+conserve <- function(obj, binding) {
+    binding <- rlang::enexpr(binding)
+    data_mask <- if(rlang::is_named(obj)) obj else NULL
+    # TODO there should be a simpler way than below to captures symbols in rlang
+    rlang::local_bindings(
+        !!!rlang::set_names(
+            # TODO below seems very hacky to me. There's got to be a better way
+            # to be able to use dot as the reference to the original object
+            list(rlang::eval_tidy(rlang::expr(!!obj %>% {!!binding[[3]]}),
+                    data = data_mask)),
+            rlang::as_name(binding[[2]])),
+        .frame = rlang::caller_env())
+    return(obj)
+}
+
+#' @export
+conserve_old <- function(obj, name) {
     # TODO there should be a simpler way than below to captures symbols in rlang
     rlang::local_bindings(
         !!!rlang::set_names(list(obj), rlang::as_name(rlang::enquo(name))),
@@ -347,13 +363,27 @@ conserve <- function(obj, name) {
 #' `instructions`.
 #'
 #' @export
-#' @rdname pipem-operator
 `%->%` <- function(obj, instructions) {
     instructions <- rlang::enquo(instructions)
     instructions_env <- rlang::quo_get_env(instructions)
     instructions_expr <- rlang::quo_get_expr(instructions)[-1]
-    instructions_expr <- purrr::modify_if(instructions_expr, rlang::is_symbol,
+    instructions_expr <- purrr::modify_if(instructions_expr,
+        ~rlang::is_call(., "<-"),
         ~rlang::expr(conserve(!!.)))
+    rlang::eval_tidy(
+        purrr::reduce(instructions_expr, ~ rlang::expr(!!.x %!>% !!.y),
+            .init = rlang::expr(!!obj)),
+        env = instructions_env)
+}
+
+#' @export
+#' @rdname pipem-operator
+`%old->%` <- function(obj, instructions) {
+    instructions <- rlang::enquo(instructions)
+    instructions_env <- rlang::quo_get_env(instructions)
+    instructions_expr <- rlang::quo_get_expr(instructions)[-1]
+    instructions_expr <- purrr::modify_if(instructions_expr, rlang::is_symbol,
+        ~rlang::expr(conserve2(!!.)))
     rlang::eval_tidy(
         purrr::reduce(instructions_expr, ~ rlang::expr(!!.x %!>% !!.y),
             .init = rlang::expr(!!obj)),
