@@ -10,7 +10,7 @@ obj \%->\% instructions
 \item{obj}{[R \code{object}] Any object, specifically data or results of
 previous pipes.}
 
-\item{instructions}{[individual \code{symbols} and R \code{commands}] Instructions
+\item{instructions}{[individual \code{bindings} and R \code{commands}] Instructions
 wrapped in curly braces to encapsualte the context of the pipe.}
 }
 \value{
@@ -40,8 +40,8 @@ operator does.
 The object part can be any single object or the result of previous piping
 operations. The instructions are exactly as if each command was sequentially
 passed to the next via the conventional \emph{magrittr} pipe. Each time a function
-instruction is followed by a symbol, that symbol is bound to the object
-resulting from the sequence up to that stage of the sequence.
+instruction is followed by a binding, the respective symbol is bound to the
+specified computation. See examples and \code{\link{conserve}}.
 }
 
 \examples{
@@ -61,12 +61,21 @@ all.equal(mydf,
 # bind intermediate values for later use
 mydf2 <- testdf \%->\% {
     dplyr::mutate(x2 = x^2)
-    somedf
+    somedf <- .
     dplyr::mutate(x6 = (somedf$x2)^3)
 }
 all.equal(mydf, mydf2)
 ## intermediate values do not remain after the pipe is done
 as.character(tryCatch(somedf, error = function(e) e))
+
+# automatic data masking in assignment
+mydf <- testdf \%->\% {
+    dplyr::mutate(x2 = x^2)
+    colx2xy <- x2 + x + y
+    dplyr::mutate(x2xyval = colx2xy)
+    dplyr::mutate(x2xy = x2 + x + y)
+}
+all.equal(mydf$x2xyval, mydf$x2xy)
 }
 \seealso{
 Other result assemblers: 

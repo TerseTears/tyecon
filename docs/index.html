@@ -138,9 +138,9 @@
 <span class="va">testdf</span> <span class="op"><a href="reference/pipem-operator.html">%-&gt;%</a></span> <span class="op">{</span>
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x2 <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x3 <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span>
-    <span class="va">somedf</span>
+    <span class="va">colx2</span> <span class="op">&lt;-</span> <span class="va">x2</span>
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x4 <span class="op">=</span> <span class="va">x2</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x6 <span class="op">=</span> <span class="op">(</span><span class="va">somedf</span><span class="op">$</span><span class="va">x2</span><span class="op">)</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x6 <span class="op">=</span> <span class="op">(</span><span class="va">colx2</span><span class="op">)</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 </div>
 <div class="section level3">
@@ -190,6 +190,11 @@ functions having extra arguments</li>
 </ul>
 </div>
 <div class="section level2">
+<h2 id="name">Name<a class="anchor" aria-label="anchor" href="#name"></a>
+</h2>
+<p>The idea of the package was originally to facilitate tasks common to econometrics, hence “<strong>t</strong>id<strong>y</strong> <strong>econ</strong>ometrics”” (other abbreviations didn’t look as good). Nevertheless, I quickly realized that the problems where largely common with general data analysis tasks, yet the name remained. Now, it can be considered “tidy <em>con</em>” functions, functions that facilitate joint operations with conciser statements.</p>
+</div>
+<div class="section level2">
 <h2 id="pending-tasks">Pending Tasks<a class="anchor" aria-label="anchor" href="#pending-tasks"></a>
 </h2>
 <ul class="task-list">
@@ -200,7 +205,7 @@ Need to add examples and documentation</li>
 <input type="checkbox" disabled checked>
 Need to add tests somehow (tricky, since working with language constructs themselves)</li>
 <li>
-<input type="checkbox" disabled>
+<input type="checkbox" disabled checked>
 TODO QoL Need to make dsl nicer, remove unintuitive interfaces by wrapping functions (e.g. currently, need ..() in convoke)</li>
 <li>
 <input type="checkbox" disabled checked>
@@ -224,7 +229,7 @@ TODO Need to decide on how to read function argument transformations from a file
 <input type="checkbox" disabled>
 TODO Need to decide on coupling or decoupling of standard interfaces with the project. Preference being decoupling and keeping the package as general as possible.</li>
 <li>
-<input type="checkbox" disabled>
+<input type="checkbox" disabled checked>
 TODO Post-processing part seems unnecessary in most cases as we’d need the whole object most times. Replace it with optional post-processing and abandon formula syntax.</li>
 <li>
 <input type="checkbox" disabled>
@@ -235,6 +240,9 @@ TODO Write tests for conflate</li>
 <li>
 <input type="checkbox" disabled>
 TODO QoL allow supplying custom arguments with <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>, e.g. <code>stan_glm = c(chains=5, iter=500)</code>.</li>
+<li>
+<input type="checkbox" disabled>
+Instead of just one <code>pipem</code> operator, have a pipe that sort of broadcasts any other pipe by the <code>%&gt;.%</code> syntax for instance. This would help ggplot. Or just do the same for ggplot <code>%+.%</code>.</li>
 </ul>
 </div>
 <div class="section level2">

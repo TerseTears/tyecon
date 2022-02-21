@@ -4,21 +4,24 @@
 \alias{conserve}
 \title{Maintain name as binding in local environment}
 \usage{
-conserve(obj, name)
+conserve(obj, name, value)
 }
 \arguments{
 \item{obj}{[R \code{object}] Any object, specifically data.}
 
-\item{name}{[\code{symbol} or \code{string}] The name to which the object will be
-bound locally}
+\item{name}{[\code{symbol} or \code{string}] The name to which a value is to be
+bound locally.}
+
+\item{value}{[\code{symbol} or \code{string}] The value for the name.}
 }
 \value{
-The \code{obj} itself. The side effect being local binding of the \code{obj} to
+The \code{obj} itself. The side effect being local binding of \code{value} to
 the specified \code{name}.
 }
 \description{
-\code{conserve} allows its first argument to be bound to the name given as its
-second argument in the local environment.
+\code{conserve} allows its third argument to be bound to the name given as its
+second argument in the local environment, while returning the first argument.
+A sort of side-effect function which binds to the caller environment.
 }
 \section{Conserving Intermediate Objects}{
 The best use of \code{conserve} is when one needs to keep an object in a long
@@ -28,7 +31,11 @@ functions) and avoid altering the global environment, since internally,
 \code{rlang::local_bindings} is used. The \code{conserve} function is what is used with
 the "pipem" pipe to bind intermediary objects to provided symbols. Exported
 for the rare occasion it may be useful on its own. One can also specifically
-set \code{conserve(name)} directives among the \code{pipem} instructions.
+set \code{conserve(name, value)} directives among the \code{pipem} instructions.
+
+The \code{value} argument can be specified in as a \code{magrittr} pipe context. That
+is, automatic data masking as well as the \code{.} symbol representing the
+original object.
 }
 
 \seealso{

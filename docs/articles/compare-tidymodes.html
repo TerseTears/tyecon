@@ -91,7 +91,7 @@
       <h1 data-toc-skip>Fitting Models <em>Without</em> parsnip</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/TerseTears/tyecon/blob/HEAD/R/vignettes/compare-tidymodes.Rmd" class="external-link"><code>R/vignettes/compare-tidymodes.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/TerseTears/tyecon/blob/HEAD/vignettes/vignettes/compare-tidymodes.Rmd" class="external-link"><code>vignettes/vignettes/compare-tidymodes.Rmd</code></a></small>
       <div class="hidden name"><code>compare-tidymodes.Rmd</code></div>
 
     </div>
@@ -152,7 +152,7 @@
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>         </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> lm        <span style="color: #949494;">&lt;lm&gt;</span>      <span style="color: #949494;">&lt;dbl [3 × 3]&gt;</span> <span style="color: #949494;">&lt;dbl [3]&gt;</span>      </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">2</span> stan_glm  <span style="color: #949494;">&lt;stanreg&gt;</span> <span style="color: #949494;">&lt;dbl [3 × 3]&gt;</span> <span style="color: #949494;">&lt;dbl [3]&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> glmnet    <span style="color: #949494;">&lt;elnet&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>        <span style="color: #949494;">&lt;dgCMatrx[,56]&gt;</span></span></code></pre></div>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> glmnet    <span style="color: #949494;">&lt;elnet&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>        <span style="color: #949494;">&lt;dgCMatrx[,55]&gt;</span></span></code></pre></div>
 <p>We can also store the tidy variant:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="va">model_results</span> <span class="op">&lt;-</span> <span class="fu">mutate</span><span class="op">(</span><span class="va">model_results</span>, tidy_val <span class="op">=</span>
@@ -163,7 +163,7 @@
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> lm        <span style="color: #949494;">&lt;lm&gt;</span>      <span style="color: #949494;">&lt;dbl [3 × 3]&gt;</span> <span style="color: #949494;">&lt;dbl [3]&gt;</span>       <span style="color: #949494;">&lt;tibble [3 × 5]&gt;</span>  </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">2</span> stan_glm  <span style="color: #949494;">&lt;stanreg&gt;</span> <span style="color: #949494;">&lt;dbl [3 × 3]&gt;</span> <span style="color: #949494;">&lt;dbl [3]&gt;</span>       <span style="color: #949494;">&lt;tibble [3 × 3]&gt;</span>  </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> glmnet    <span style="color: #949494;">&lt;elnet&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>        <span style="color: #949494;">&lt;dgCMatrx[,56]&gt;</span> <span style="color: #949494;">&lt;tibble [165 × 5]&gt;</span></span></code></pre></div>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> glmnet    <span style="color: #949494;">&lt;elnet&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>        <span style="color: #949494;">&lt;dgCMatrx[,55]&gt;</span> <span style="color: #949494;">&lt;tibble [162 × 5]&gt;</span></span></code></pre></div>
 <p>We can also plot the results rather easily. First, let us make a unified plot function using <code>conflate</code>, as <code>plot</code> is simply a generic function:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="va">conflated_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/conflate.html">conflate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>

@@ -79,7 +79,7 @@ stages of the sequence of functions.</p>
 <dd><p>[R <code>object</code>] Any object, specifically data or results of
 previous pipes.</p></dd>
 <dt>instructions</dt>
-<dd><p>[individual <code>symbols</code> and R <code>commands</code>] Instructions
+<dd><p>[individual <code>bindings</code> and R <code>commands</code>] Instructions
 wrapped in curly braces to encapsualte the context of the pipe.</p></dd>
 </dl></div>
     <div id="value">
@@ -106,8 +106,8 @@ operator does.</p>
 <p>The object part can be any single object or the result of previous piping
 operations. The instructions are exactly as if each command was sequentially
 passed to the next via the conventional <em>magrittr</em> pipe. Each time a function
-instruction is followed by a symbol, that symbol is bound to the object
-resulting from the sequence up to that stage of the sequence.</p>
+instruction is followed by a binding, the respective symbol is bound to the
+specified computation. See examples and <code><a href="conserve.html">conserve</a></code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -135,7 +135,7 @@ resulting from the sequence up to that stage of the sequence.</p>
 <span class="r-in"><span class="co"># bind intermediate values for later use</span></span>
 <span class="r-in"><span class="va">mydf2</span> <span class="op">&lt;-</span> <span class="va">testdf</span> <span class="op">%-&gt;%</span> <span class="op">{</span></span>
 <span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x2 <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in">    <span class="va">somedf</span></span>
+<span class="r-in">    <span class="va">somedf</span> <span class="op">&lt;-</span> <span class="va">.</span></span>
 <span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x6 <span class="op">=</span> <span class="op">(</span><span class="va">somedf</span><span class="op">$</span><span class="va">x2</span><span class="op">)</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">mydf</span>, <span class="va">mydf2</span><span class="op">)</span></span>
@@ -143,6 +143,16 @@ resulting from the sequence up to that stage of the sequence.</p>
 <span class="r-in"><span class="co">## intermediate values do not remain after the pipe is done</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="va">somedf</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="va">e</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Error in doTryCatch(return(expr), name, parentenv, handler): object 'somedf' not found\n"</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># automatic data masking in assignment</span></span>
+<span class="r-in"><span class="va">mydf</span> <span class="op">&lt;-</span> <span class="va">testdf</span> <span class="op">%-&gt;%</span> <span class="op">{</span></span>
+<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x2 <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span class="r-in">    <span class="va">colx2xy</span> <span class="op">&lt;-</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x</span> <span class="op">+</span> <span class="va">y</span></span>
+<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x2xyval <span class="op">=</span> <span class="va">colx2xy</span><span class="op">)</span></span>
+<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>x2xy <span class="op">=</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x</span> <span class="op">+</span> <span class="va">y</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">}</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">mydf</span><span class="op">$</span><span class="va">x2xyval</span>, <span class="va">mydf</span><span class="op">$</span><span class="va">x2xy</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 </code></pre></div>
     </div>
   </div>

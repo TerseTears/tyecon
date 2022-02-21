@@ -91,7 +91,7 @@
       <h1 data-toc-skip>Example Issues</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/TerseTears/tyecon/blob/HEAD/R/vignettes/example-issues.Rmd" class="external-link"><code>R/vignettes/example-issues.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/TerseTears/tyecon/blob/HEAD/vignettes/vignettes/example-issues.Rmd" class="external-link"><code>vignettes/vignettes/example-issues.Rmd</code></a></small>
       <div class="hidden name"><code>example-issues.Rmd</code></div>
 
     </div>
@@ -166,10 +166,12 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">9</span>, <span class="op">-</span><span class="fl">3</span>, <span class="fl">12</span><span class="op">)</span> <span class="op"><a href="../reference/pipem-operator.html">%-&gt;%</a></span> <span class="op">{</span>
     <span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">}</span><span class="op">)</span><span class="op">(</span><span class="op">)</span>
-    <span class="va">vec2</span>
+    <span class="va">vec2</span> <span class="op">&lt;-</span> <span class="va">.</span>
     <span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="fl">3</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">vec2</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">}</span><span class="op">)</span><span class="op">(</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="co">#&gt; [1]    4347  531692     980 2986235</span></code></pre></div>
+<p>Another convenience of this operator is that one can simply comment out the remaining lines for debugging purposes, without having to write an extra <code><a href="https://rdrr.io/r/base/identity.html" class="external-link">identity()</a></code> for instance.</p>
+<p>Note that since the operator treats symbols specially, functions with single arguments should be in the form <code>func()</code> and not just <code>func</code>. This is a best practice in the original <code>magrittr</code> pipe as well in any case.</p>
 </div>
 <div class="section level2">
 <h2 id="the-to-operator">The <code>%to%</code> Operator<a class="anchor" aria-label="anchor" href="#the-to-operator"></a>
