@@ -117,4 +117,25 @@ test_that("piping from previous statements works", {
     }, testdf %>% dplyr::mutate(x2 = x^2) %>% dplyr::mutate(x6 = x2^3))
 })
 
+test_that("local environment works", {
+    expect_equal(
+        local({
+            poval <- 3
+            testdf %->% {
+                dplyr::mutate(x2 = x^2)
+                dplyr::mutate(x6 = x2^poval)
+        }}), testdf %>% dplyr::mutate(x2 = x^2) %>% dplyr::mutate(x6 = x2^3))
+})
+
+test_that("local environment works in assignment", {
+    expect_equal(
+        local({
+            poval <- 3
+            testdf %->% {
+                dplyr::mutate(x2 = x^2)
+                colx6 <- x2^poval
+                dplyr::mutate(x6 = colx6)
+        }}), testdf %>% dplyr::mutate(x2 = x^2) %>% dplyr::mutate(x6 = x2^3))
+})
+
 # TODO write tests to check good error handling

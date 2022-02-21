@@ -306,8 +306,10 @@ conserve <- function(obj, binding) {
         !!!rlang::set_names(
             # TODO below seems very hacky to me. There's got to be a better way
             # to be able to use dot as the reference to the original object
-            list(rlang::eval_tidy(rlang::expr(!!obj %>% {!!binding[[3]]}),
-                    data = data_mask)),
+            # TODO there seems to be a bug with rlang where supplying data
+            # mask ignores the default env argument so need to resupply it.
+            list(rlang::eval_tidy(rlang::expr(!!obj %!>% {!!binding[[3]]}),
+                    data = data_mask, env = rlang::caller_env())),
             rlang::as_name(binding[[2]])),
         .frame = rlang::caller_env())
     return(obj)
@@ -368,8 +370,7 @@ conserve_old <- function(obj, name) {
     instructions_env <- rlang::quo_get_env(instructions)
     instructions_expr <- rlang::quo_get_expr(instructions)[-1]
     instructions_expr <- purrr::modify_if(instructions_expr,
-        ~rlang::is_call(., "<-"),
-        ~rlang::expr(conserve(!!.)))
+        ~rlang::is_call(., "<-"), ~rlang::expr(conserve(!!.)))
     rlang::eval_tidy(
         purrr::reduce(instructions_expr, ~ rlang::expr(!!.x %!>% !!.y),
             .init = rlang::expr(!!obj)),
