@@ -271,11 +271,11 @@ print.conflate <- function(x, ...) {
     cat(header, arguments, sep="\n")
 }
 
-
 #' Maintain name as binding in local environment
 #'
-#' `conserve` allows its first argument to be bound to the name given as its
-#' second argument in the local environment.
+#' `conserve` allows its third argument to be bound to the name given as its
+#' second argument in the local environment, while returning the first argument.
+#' A sort of side-effect function which binds to the caller environment.
 #'
 #' # Conserving Intermediate Objects
 #'
@@ -286,20 +286,26 @@ print.conflate <- function(x, ...) {
 #' `rlang::local_bindings` is used. The `conserve` function is what is used with
 #' the "pipem" pipe to bind intermediary objects to provided symbols. Exported
 #' for the rare occasion it may be useful on its own. One can also specifically
-#' set `conserve(name)` directives among the `pipem` instructions.
+#' set `conserve(name, value)` directives among the `pipem` instructions.
+#' 
+#' The `value` argument can be specified in as a `magrittr` pipe context. That
+#' is, automatic data masking as well as the `.` symbol representing the
+#' original object.
 #'
 #' @family result assemblers
 #'
 #' @param obj \[R `object`\] Any object, specifically data.
-#' @param name \[`symbol` or `string`\] The name to which the object will be
-#' bound locally
+#' @param name \[`symbol` or `string`\] The name to which a value is to be
+#' bound locally.
+#' @param value \[`symbol` or `string`\] The value for the name.
 #'
-#' @return The `obj` itself. The side effect being local binding of the `obj` to
+#' @return The `obj` itself. The side effect being local binding of `value` to
 #' the specified `name`.
 #'
 #' @export
-conserve <- function(obj, binding) {
-    binding <- rlang::enexpr(binding)
+conserve <- function(obj, name, value) {
+    name <- rlang::enexpr(name)
+    value <- rlang::enexpr(value)
     data_mask <- if(rlang::is_named(obj)) obj else NULL
     # TODO there should be a simpler way than below to captures symbols in rlang
     rlang::local_bindings(
@@ -308,20 +314,11 @@ conserve <- function(obj, binding) {
             # to be able to use dot as the reference to the original object
             # TODO there seems to be a bug with rlang where supplying data
             # mask ignores the default env argument so need to resupply it.
-            list(rlang::eval_tidy(rlang::expr(!!obj %!>% {!!binding[[3]]}),
+            list(rlang::eval_tidy(rlang::expr(!!obj %!>% {!!value}),
                     data = data_mask, env = rlang::caller_env())),
-            rlang::as_name(binding[[2]])),
+            rlang::as_name(name)),
         .frame = rlang::caller_env())
     return(obj)
-}
-
-#' @export
-conserve_old <- function(obj, name) {
-    # TODO there should be a simpler way than below to captures symbols in rlang
-    rlang::local_bindings(
-        !!!rlang::set_names(list(obj), rlang::as_name(rlang::enquo(name))),
-        .frame = rlang::caller_env())
-    return(name)
 }
 
 #' Piping environment for brevity and coalescence
@@ -350,41 +347,28 @@ conserve_old <- function(obj, name) {
 #' The object part can be any single object or the result of previous piping
 #' operations. The instructions are exactly as if each command was sequentially
 #' passed to the next via the conventional *magrittr* pipe. Each time a function
-#' instruction is followed by a symbol, that symbol is bound to the object
-#' resulting from the sequence up to that stage of the sequence.
+#' instruction is followed by a binding, the respective symbol is bound to the
+#' specified computation. See examples and \code{\link{conserve}}.
 #'
 #' @family result assemblers
 #' @example examples/examples-pipem-operator.R
 #'
 #' @param obj \[R `object`\] Any object, specifically data or results of
 #' previous pipes.
-#' @param instructions \[individual `symbols` and R `commands`\] Instructions
+#' @param instructions \[individual `bindings` and R `commands`\] Instructions
 #' wrapped in curly braces to encapsualte the context of the pipe.
 #'
-#' @return An object resulting from the transformations applied to it by the 
+#' @return An object resulting from the transformations applied to it by the
 #' `instructions`.
 #'
+#' @rdname pipem-operator
 #' @export
 `%->%` <- function(obj, instructions) {
     instructions <- rlang::enquo(instructions)
     instructions_env <- rlang::quo_get_env(instructions)
     instructions_expr <- rlang::quo_get_expr(instructions)[-1]
     instructions_expr <- purrr::modify_if(instructions_expr,
-        ~rlang::is_call(., "<-"), ~rlang::expr(conserve(!!.)))
-    rlang::eval_tidy(
-        purrr::reduce(instructions_expr, ~ rlang::expr(!!.x %!>% !!.y),
-            .init = rlang::expr(!!obj)),
-        env = instructions_env)
-}
-
-#' @export
-#' @rdname pipem-operator
-`%old->%` <- function(obj, instructions) {
-    instructions <- rlang::enquo(instructions)
-    instructions_env <- rlang::quo_get_env(instructions)
-    instructions_expr <- rlang::quo_get_expr(instructions)[-1]
-    instructions_expr <- purrr::modify_if(instructions_expr, rlang::is_symbol,
-        ~rlang::expr(conserve2(!!.)))
+        ~rlang::is_call(., "<-"), ~rlang::expr(conserve(., !!.[[2]], !!.[[3]])))
     rlang::eval_tidy(
         purrr::reduce(instructions_expr, ~ rlang::expr(!!.x %!>% !!.y),
             .init = rlang::expr(!!obj)),
