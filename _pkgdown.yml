@@ -1,0 +1,15 @@
+---
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+
+reference:
+  - title: Assemble Functions
+    desc: Functions that generate functions of combined usability
+  - contents:
+      - has_concept("function assemblers")
+  - title: Assemble Results
+    desc: Functions that ease combining of function results
+  - contents:
+      - has_concept("result assemblers")
+---
