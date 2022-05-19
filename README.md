@@ -83,6 +83,22 @@ testdf %->% {
 }
 ```
 
+### %$>% construct operator
+
+This pipe facilitates transforming data into a new structure with concise 
+syntax:
+
+```r
+testdf <- tibble::tribble(~x, ~y,
+                  1, 2,
+                  5, 9,
+                  12, 8)
+testdf %$>% {
+  minx <- min(x)
+  miny <- min(y)
+}
+```
+
 ### `%to%` operator
 
 The `%to%` operator, is a convenience function, omitting the process of having

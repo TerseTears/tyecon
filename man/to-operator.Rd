@@ -64,6 +64,7 @@ testvec \%to\% {
 }
 \seealso{
 Other result assemblers: 
+\code{\link{\%$>\%}()},
 \code{\link{\%->\%}()},
 \code{\link{conserve}()}
 }

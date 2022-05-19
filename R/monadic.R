@@ -101,3 +101,51 @@ conserve <- function(obj, name, value) {
         .frame = rlang::caller_env())
     return(obj)
 }
+
+
+#' Piping environment for transforming data into new data format
+#'
+#' `%$>%` construct operator allows taking apart the elements of a data to build
+#' a new data type more quickly. This is done by data masking and access to the 
+#' original object by the `.` pronoun from `magrittr`. Each line is a component 
+#' of the new data. If the line is an assignment, the new component name is the 
+#' assigned variable name, otherwise, its position is determined by how many
+#' previous variables have been assigned. See examples.
+#'
+#' @family result assemblers
+#' @example examples/examples-construct-operator.R
+#'
+#' @param data \[R `object`\] Any object, specifically data or results of
+#' previous pipes.
+#' @param code \[individual `bindings` and R `commands`\] Instructions
+#' wrapped in curly braces to encapsualte the context of the pipe.
+#'
+#' @return list with fields specified by any assignments inside `code`.
+#'
+#' @rdname construct-operator
+#' @export
+# TODO maybe later I can add annotations inside for the idea of a graph of
+# relations among model elements for visualization
+`%$>%` <- function(data, code){
+  code <- rlang::enquo(code)
+  code_env <- rlang::quo_get_env(code)
+  code_exprs <- rlang::quo_get_expr(code)[-1]
+
+  data_mask <- if(rlang::is_named(data)) {
+    rlang::as_data_mask(data)
+  } else {
+    rlang::as_data_mask(list())
+  }
+
+  ret_data <- purrr::map(code_exprs, ~
+    rlang::eval_tidy(
+      rlang::expr(!!data %!>% {!!.}),
+      data = data_mask, 
+      env = rlang::caller_env()))
+  ret_data <- rlang::set_names(
+    ret_data, 
+    purrr::map_chr(code_exprs, ~
+      if(rlang::is_call(., "<-")) rlang::as_string(.[[2]]) else ""))
+
+  return(ret_data)
+}
