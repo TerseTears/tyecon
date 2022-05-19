@@ -23,11 +23,15 @@ data(ames)
 
 # Fitting Models Without parsnip
 
-This vignette shows how we can achieve the same (if not better) consistency of using multiple models together without the need for packages such as `parsnip` or `broom`. Original article which uses these two packages can be found in the tidymodels book, [here](https://www.tmwr.org/models.html).
+This vignette shows how we can achieve the same (if not better) consistency of
+using multiple models together without the need for packages such as `parsnip`
+or `broom`. Original article which uses these two packages can be found in the
+tidymodels book, [here](https://www.tmwr.org/models.html).
 
 ## The linear functions family
 
-To build this family, we simply encapsulate the three `lm`, `stan_glm`, and `glmnet` functions together, using `tyecon::convoke`:
+To build this family, we simply encapsulate the three `lm`, `stan_glm`, and
+`glmnet` functions together, using `tyecon::convoke`:
 
 ```{r, message=F}
 library(rstanarm)
@@ -43,39 +47,52 @@ First, we unify the models:
 
 ```{r, message=F}
 (linear_model <-
-    convoke(list(formula, data),
-            lm(formula = formula, data = data),
-            stan_glm(formula = formula, data = data, mean_PPD = FALSE),
-            glmnet(x = model.frame(formula, data = data)[-1],
-                   y = model.frame(formula, data = data)[[1]])))
+  convoke(
+    list(formula, data),
+    lm(formula = formula, data = data),
+    stan_glm(formula = formula, data = data, mean_PPD = FALSE),
+    glmnet(
+      x = model.frame(formula, data = data)[-1],
+      y = model.frame(formula, data = data)[[1]]
+    )
+  ))
 ```
 
 ```{r, results='hide'}
-model_results <- enframe(map(set_names(names(linear_model)), ~
-    linear_model(Sale_Price ~ Longitude + Latitude, ames_train, interface = .)),
-    "modelname", "model") %>% rowwise
+model_results <- enframe(
+  map(
+    set_names(names(linear_model)),
+    ~ linear_model(Sale_Price ~ Longitude + Latitude, ames_train, interface = .)
+  ),
+  "modelname", "model"
+) %>% rowwise()
 ```
 
 ```{r}
-(model_results <- mutate(model_results, vcov_val =
-                         list(possibly(vcov, NULL)(model))))
+(model_results <- mutate(model_results,
+  vcov_val = list(possibly(vcov, NULL)(model))
+))
 ```
 
-Now we'd want to see the coefficients, possibly alongside some other information. In fact, we may want to know a lot more about each model as well.
+Now we'd want to see the coefficients, possibly alongside some other
+information. In fact, we may want to know a lot more about each model as well.
 
 ```{r}
-(model_results <- mutate(model_results, coef_val =
-                         list(possibly(coef, NULL)(model))))
+(model_results <- mutate(model_results,
+  coef_val = list(possibly(coef, NULL)(model))
+))
 ```
 
 We can also store the tidy variant:
 
 ```{r}
-(model_results <- mutate(model_results, tidy_val =
-                         list(possibly(tidy, NULL)(model))))
+(model_results <- mutate(model_results,
+  tidy_val = list(possibly(tidy, NULL)(model))
+))
 ```
 
-We can also plot the results rather easily. First, let us make a unified plot function using `conflate`, as `plot` is simply a generic function:
+We can also plot the results rather easily. First, let us make a unified plot
+function using `conflate`, as `plot` is simply a generic function:
 
 ```{r}
 (conflated_plot <- conflate(plot(x)))
@@ -83,9 +100,12 @@ We can also plot the results rather easily. First, let us make a unified plot fu
 
 
 ```{r, eval=F}
-par(mfrow=c(2,2))
-walk(pull(model_results, model), ~
-    conflated_plot(., lm.ask = FALSE, lm.which = 1,
-                   elnet.xvar = "dev", stanreg.plotfun = "hist"))
+par(mfrow = c(2, 2))
+walk(
+  pull(model_results, model),
+  ~ conflated_plot(.,
+    lm.ask = FALSE, lm.which = 1,
+    elnet.xvar = "dev", stanreg.plotfun = "hist"
+  )
+)
 ```
-

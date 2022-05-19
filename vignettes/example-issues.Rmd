@@ -26,34 +26,42 @@ library(dplyr)
 
 # The `convoke` Function
 
-Here is one example of different function interfaces doing the same thing and how the provided DSL would simplify this issue.
+Here is one example of different function interfaces doing the same thing and
+how the provided DSL would simplify this issue.
 
-The two functions each take a different data type in, produce a different out data, use different name for trim argument, and one does not have a default value for column (works only on vectors).
+The two functions each take a different data type in, produce a different out
+data, use different name for trim argument, and one does not have a default
+value for column (works only on vectors).
 
 ```{r example-funcs}
-basemeancalc <- function(listdata, trimmed = 0.0, na.rm = T){
-    mean(listdata, trim = trimmed, na.rm = na.rm)
+basemeancalc <- function(listdata, trimmed = 0.0, na.rm = T) {
+  mean(listdata, trim = trimmed, na.rm = na.rm)
 }
 
-tidymeancalc <- function(tibbledata, column, trimend = 0.0, trimstart = 0.0){
-    column <- as_string(ensym(column))
-    colvector <- tibbledata[[column]] %>% sort %>% na.omit
-    nelem <- length(colvector)
-    colvector <- colvector[floor(nelem*trimstart) + 1 : nelem - floor(nelem*trimend)]
-    return(mean(colvector))
+tidymeancalc <- function(tibbledata, column, trimend = 0.0, trimstart = 0.0) {
+  column <- as_string(ensym(column))
+  colvector <- tibbledata[[column]] %>%
+    sort() %>%
+    na.omit()
+  nelem <- length(colvector)
+  colvector <-
+    colvector[floor(nelem * trimstart) + 1:nelem - floor(nelem * trimend)]
+  return(mean(colvector))
 }
 
-mydf <- tribble(~x, ~y,
-                1, 5,
-                4, 3,
-                6, 2,
-                17, 4,
-                8, 12,
-                14, 16,
-                21, 72,
-                19, 32,
-                10, 15,
-                NA, NA)
+mydf <- tribble(
+  ~x, ~y,
+  1, 5,
+  4, 3,
+  6, 2,
+  17, 4,
+  8, 12,
+  14, 16,
+  21, 72,
+  19, 32,
+  10, 15,
+  NA, NA
+)
 
 tidymeancalc(mydf, x, trimend = 0.1, trimstart = 0.1)
 basemeancalc(mydf$x, trimmed = 0.1)
@@ -63,58 +71,81 @@ mean(mydf$x, trim = 0.1, na.rm = T)
 Three vastly different APIs. Now, for unification:
 
 ```{r convoke-example}
-(mymean <- convoke(list(tibble, column, trim),
-       basemeancalc(listdata = tibble[[column]], trimmed = trim),
-       tidymeancalc(tibbledata = tibble, column = !!column, trimend = trim,
-                    trimstart = trim)))
+(mymean <- convoke(
+  list(tibble, column, trim),
+  basemeancalc(listdata = tibble[[column]], trimmed = trim),
+  tidymeancalc(
+    tibbledata = tibble, column = !!column, trimend = trim, trimstart = trim
+  )
+))
 ```
 
 ```{r}
-map(set_names(c("basemeancalc", "tidymeancalc")),
-              ~ mymean(mydf, "x", 0.1, interface = ., basemeancalc.na.rm=T))
+map(
+  set_names(c("basemeancalc", "tidymeancalc")),
+  ~ mymean(mydf, "x", 0.1, interface = ., basemeancalc.na.rm = T)
+)
 ```
 
 One can also add additional specifications later:
 
 ```{r}
-mymean <- mymean + ~mean(x = tibble[[column]], trimmed = trim)
-mymean(mydf, "x", 0.1, interface = "mean", mean.na.rm=T)
+mymean <- mymean + ~ mean(x = tibble[[column]], trimmed = trim)
+mymean(mydf, "x", 0.1, interface = "mean", mean.na.rm = T)
 ```
 
-Nevertheless, the ultimate goal is to specify a DSL by which the package author can convert its functions to a unified interface by only specifying some general rules (in a text file bundled with the package for instance). This would allow the package author to separate the need to conform with a unified interface from writing the packages however is seen best.
-Nevertheless, hard-codded values can't be changed or passed down obviously, and would still require upstream fixes.
+Nevertheless, the ultimate goal is to specify a DSL by which the package author
+can convert its functions to a unified interface by only specifying some
+general rules (in a text file bundled with the package for instance). This
+would allow the package author to separate the need to conform with a unified
+interface from writing the packages however is seen best. Nevertheless,
+hard-codded values can't be changed or passed down obviously, and would still
+require upstream fixes.
 
 # The `%->%` *pipem* Operator
 
 <!-- TODO come up with better example here -->
 
-This operator facilitates chaining instructions without explicitly writing the `magrittr` pipe. Additionally, it allows for intermediate values to be kept and used later down the chain of instructions. For instance, consider the case where we want to compute `abs(vec^3) * (sum(vec^2) + 1)` sequentially, instead of using a single function:
+This operator facilitates chaining instructions without explicitly writing the
+`magrittr` pipe. Additionally, it allows for intermediate values to be kept and
+used later down the chain of instructions. For instance, consider the case
+where we want to compute `abs(vec^3) * (sum(vec^2) + 1)` sequentially, instead
+of using a single function:
 
 ```{r}
 c(-4, 9, -3, 12) %->% {
-    (function(x) {x^2})()
-    vec2 <- .
-    (function(x) {abs(x^3) + sum(vec2) + 1})()
+  (function(x) {
+    x^2
+  })()
+  vec2 <- .
+  (function(x) {
+    abs(x^3) + sum(vec2) + 1
+  })()
 }
 ```
 
-Another convenience of this operator is that one can simply comment out the remaining lines for debugging purposes, without having to write an extra `identity()` for instance.
+Another convenience of this operator is that one can simply comment out the
+remaining lines for debugging purposes, without having to write an extra
+`identity()` for instance.
 
-Note that since the operator treats symbols specially, functions with single arguments should be in the form `func()` and not just `func`. This is a best practice in the original `magrittr` pipe as well in any case.
+Note that since the operator treats symbols specially, functions with single
+arguments should be in the form `func()` and not just `func`. This is a best
+practice in the original `magrittr` pipe as well in any case.
 
 # The `%to%` Operator
 
-This operator facilitates a different issue that arises quite often in model building. And that is requiring multiple results from the same object. Example:
+This operator facilitates a different issue that arises quite often in model
+building. And that is requiring multiple results from the same object. Example:
 
 ```{r}
 modelfit <- lm(y ~ x, data = mydf)
 (res <- summary(modelfit) %to% {
-    rsquared ~ .$r.squared
-    adjrsquared ~ .$adj.r.squared
-    residuals ~ .$residuals
-    pval ~ coef(.)[,"Pr(>|t|)"]
-    termsof ~ .$terms
-    callof ~ .$call
+  rsquared ~ .$r.squared
+  adjrsquared ~ .$adj.r.squared
+  residuals ~ .$residuals
+  pval ~ coef(.)[, "Pr(>|t|)"]
+  termsof ~ .$terms
+  callof ~ .$call
 })
 ```
 
@@ -125,4 +156,3 @@ res$pval
 ```
 
 Comparing this with the result from `broom::glance`, one can see that the above approach is much more flexible.
-

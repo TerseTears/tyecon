@@ -1,8 +1,10 @@
 # use the pipe to build data in steps:
-testdf <- tibble::tribble(~x, ~y,
-                  3, 2,
-                  5, 9,
-                  12, 8)
+testdf <- tibble::tribble(
+  ~x, ~y,
+  3, 2,
+  5, 9,
+  12, 8
+)
 testdf %$>% {
   minx <- min(x)
   miny <- min(y)
@@ -36,4 +38,3 @@ val <- testdf %$>% {
 val$xval
 val[[1]]
 val[[3]]
-
