@@ -1,6 +1,10 @@
+# tyecon 0.2.3
+
+* Add `construct` pipe
+
 # tyecon 0.2.2
 
-* Add the `pipem` operator for conciser more powerful piping statements
+* Add the `convey` operator for conciser more powerful piping statements
 * Remove `formula` specification and postprocessing for `convoke`
 * Use `argslist` instead of function for `convoke`
 
