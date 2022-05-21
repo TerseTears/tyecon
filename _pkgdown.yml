@@ -1,7 +1,7 @@
 ---
 template:
   bootstrap: 5
-  bootswatch: cosmo
+  bootswatch: litera
 
 reference:
   - title: Assemble Functions
