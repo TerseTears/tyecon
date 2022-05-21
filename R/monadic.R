@@ -1,6 +1,6 @@
 #' Piping environment for brevity and coalescence
 #'
-#' `%->%` pipem operator allows omission of the `%>%` pipe operator in its
+#' `%->%` `convey` operator allows omission of the `%>%` pipe operator in its
 #' environment as well as setting local bindings that can be used at later
 #' stages of the sequence of functions.
 #'
@@ -12,13 +12,13 @@
 #' whole object out of the simpler modifications of the original object. This
 #' too is Something that the simple pipe operator can't handle. Therefore,
 #' the solution is to define a context for these two cases, perform the
-#' operations therein, and return the desired result. That is what the "pipem"
+#' operations therein, and return the desired result. That is what the "convey"
 #' operator does.
 #'
-#' # Usage of the *pipem* Operator
+#' # Usage of the *convey* Operator
 #'
 #' ```
-#' object %->% {instructions}
+#' object %->% code
 #' ```
 #'
 #' The object part can be any single object or the result of previous piping
@@ -28,33 +28,32 @@
 #' specified computation. See examples and \code{\link{conserve}}.
 #'
 #' @family result assemblers
-#' @example examples/examples-pipem-operator.R
+#' @example examples/examples-convey-operator.R
 #'
 #' @param obj \[R `object`\] Any object, specifically data or results of
 #' previous pipes.
-#' @param instructions \[individual `bindings` and R `commands`\] Instructions
+#' @param code \[individual `bindings` and R `commands`\] Instructions
 #' wrapped in curly braces to encapsualte the context of the pipe.
 #'
 #' @return An object resulting from the transformations applied to it by the
-#' `instructions`.
+#' `code`.
 #'
-#' @rdname pipem-operator
+#' @rdname convey-operator
 #' @export
 # TODO perhaps adding tyecon::conserve fixes requirement of exporting conserve.
-# TODO use data, code instead of obj, instructions
-`%->%` <- function(obj, instructions) {
-  instructions <- rlang::enquo(instructions)
-  instructions_env <- rlang::quo_get_env(instructions)
-  instructions_expr <- rlang::quo_get_expr(instructions)[-1]
-  instructions_expr <- purrr::modify_if(
-    instructions_expr,
+`%->%` <- function(obj, code) {
+  code <- rlang::enquo(code)
+  code_env <- rlang::quo_get_env(code)
+  code_exprs <- rlang::quo_get_expr(code)[-1]
+  code_exprs <- purrr::modify_if(
+    code_exprs,
     ~ rlang::is_call(., "<-"), ~ rlang::expr(conserve(., !!.[[2]], !!.[[3]]))
   )
   rlang::eval_tidy(
-    purrr::reduce(instructions_expr, ~ rlang::expr(!!.x %!>% !!.y),
+    purrr::reduce(code_exprs, ~ rlang::expr(!!.x %!>% !!.y),
       .init = rlang::expr(!!obj)
     ),
-    env = instructions_env
+    env = code_env
   )
 }
 
@@ -71,9 +70,9 @@
 #' It is essential to provide this local context (e.g. using `local` or inside
 #' functions) and avoid altering the global environment, since internally,
 #' `rlang::local_bindings` is used. The `conserve` function is what is used with
-#' the "pipem" pipe to bind intermediary objects to provided symbols. Exported
+#' the "convey" pipe to bind intermediary objects to provided symbols. Exported
 #' for the rare occasion it may be useful on its own. One can also specifically
-#' set `conserve(name, value)` directives among the `pipem` instructions.
+#' set `conserve(name, value)` directives among the `convey` instructions.
 #'
 #' The `value` argument can be specified in as a `magrittr` pipe context. That
 #' is, automatic data masking as well as the `.` symbol representing the

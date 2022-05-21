@@ -29,9 +29,9 @@ sequence of commands to be used later in the same sequence (so mostly pipes).
 It is essential to provide this local context (e.g. using \code{local} or inside
 functions) and avoid altering the global environment, since internally,
 \code{rlang::local_bindings} is used. The \code{conserve} function is what is used with
-the "pipem" pipe to bind intermediary objects to provided symbols. Exported
+the "convey" pipe to bind intermediary objects to provided symbols. Exported
 for the rare occasion it may be useful on its own. One can also specifically
-set \code{conserve(name, value)} directives among the \code{pipem} instructions.
+set \code{conserve(name, value)} directives among the \code{convey} instructions.
 
 The \code{value} argument can be specified in as a \code{magrittr} pipe context. That
 is, automatic data masking as well as the \code{.} symbol representing the

@@ -4,21 +4,21 @@
 \alias{\%->\%}
 \title{Piping environment for brevity and coalescence}
 \usage{
-obj \%->\% instructions
+obj \%->\% code
 }
 \arguments{
 \item{obj}{[R \code{object}] Any object, specifically data or results of
 previous pipes.}
 
-\item{instructions}{[individual \code{bindings} and R \code{commands}] Instructions
+\item{code}{[individual \code{bindings} and R \code{commands}] Instructions
 wrapped in curly braces to encapsualte the context of the pipe.}
 }
 \value{
 An object resulting from the transformations applied to it by the
-\code{instructions}.
+\code{code}.
 }
 \description{
-\verb{\%->\%} pipem operator allows omission of the \verb{\%>\%} pipe operator in its
+\verb{\%->\%} \code{convey} operator allows omission of the \verb{\%>\%} pipe operator in its
 environment as well as setting local bindings that can be used at later
 stages of the sequence of functions.
 }
@@ -29,12 +29,12 @@ to record the result of a pipe up to a certain stage, to later build the
 whole object out of the simpler modifications of the original object. This
 too is Something that the simple pipe operator can't handle. Therefore,
 the solution is to define a context for these two cases, perform the
-operations therein, and return the desired result. That is what the "pipem"
+operations therein, and return the desired result. That is what the "convey"
 operator does.
 }
 
-\section{Usage of the \emph{pipem} Operator}{
-\preformatted{object \%->\% \{instructions\}
+\section{Usage of the \emph{convey} Operator}{
+\preformatted{object \%->\% code
 }
 
 The object part can be any single object or the result of previous piping
