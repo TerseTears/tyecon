@@ -154,7 +154,7 @@ conserve <- function(obj, name, value) {
         }
       ),
       data = data_mask,
-      env = rlang::caller_env()
+      env = code_env
     ))
   ret_data <- rlang::set_names(
     ret_data,

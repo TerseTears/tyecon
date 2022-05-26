@@ -61,3 +61,14 @@ test_that("data masking works", {
     }, list(val1 = 12, val2 = 2)
   )
 })
+
+test_that("local environment works", {
+    someval <- 4
+  expect_equal(
+    testdf %$>% {
+      val1 <- max(x)
+      val2 <- min(y)
+      insertedval <- someval
+    }, list(val1 = 12, val2 = 2, insertedval = 4)
+  )
+})
