@@ -56,15 +56,11 @@ testdf \%$>\% {
   minall <- min(.)
 }
 
-# Unnamed instructions can only be accessed by position
-val <- testdf \%$>\% {
-  min(x)
+# Result of unnamed instructions are used as is
+testdf \%$>\% {
   xval <- x
-  min(y)
+  list(minx = min(x), miny = min(y), 12)
 }
-val$xval
-val[[1]]
-val[[3]]
 }
 \seealso{
 Other result assemblers: 

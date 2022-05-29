@@ -152,14 +152,24 @@ conserve <- function(obj, name, value) {
         !!data %!>% {
           !!.
         }
-      ),
+        ),
       data = data_mask,
       env = code_env
-    ))
-  ret_data <- rlang::set_names(
-    ret_data,
-    purrr::map_chr(code_exprs, ~
-      if (rlang::is_call(., "<-")) rlang::as_string(.[[2]]) else "")
+      ))
+ret_data <- rlang::set_names(
+  ret_data,
+  purrr::map(code_exprs, ~ if (rlang::is_call(., "<-")) .[[2]] else "")
+)
+  # Use unnamed lists as is
+  ret_data <- purrr::reduce2(ret_data, names(ret_data),
+    function(prev, .x, .y) {
+      if (.y == "") {
+        c(prev, .x)
+      } else {
+        c(prev, rlang::set_names(list(.x), .y))
+      }
+    },
+    .init = list()
   )
   return(ret_data)
 }
