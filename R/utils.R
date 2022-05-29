@@ -112,3 +112,44 @@ pretty_func_args <- function(func, extra_args = NULL) {
     as.data.frame(reslist)
   }
 }
+
+#' Prettier Printing of object overview
+#'
+#' `str_pretty` is a wrapper around `str` that tries to use better, more
+#' distinct identifiers in the object overview.
+#'
+#' @param x \[R `object`\] Any object.
+#' @param ... \[named arguments\] Extra arguments to pass to `str`.
+#'
+#' @return Nothing. Only side effect being output to stdout. 
+#'
+#' @examples
+#' str_pretty(lm(Sepal.Length ~ ., data = iris))
+#'
+#' nst_lst <- list()
+#' nst_lst$a <- list(c(9,2,4, 12), g=c(2,4,9,7), h=list(m=4,n=7,d=12))
+#' nst_lst$b <- c(4, 3, 9, 10, 3, 16, 1, 7)
+#' nst_lst$f <- c("a", "b")
+#' nst_lst$c <- 4
+#' nst_lst$d <- c(7,9)
+#' str_pretty(nst_lst)
+#'
+#' # Pass `str` arguments to modify behavior
+#' str_pretty(lm(Sepal.Length ~ ., data = iris), give.attr = TRUE)
+#'
+#' @export
+str_pretty <- function(x, ...) {
+  arglist <- rlang::list2(...)
+  if (!"give.attr" %in% names(arglist)) arglist$give.attr <- FALSE
+  if (!"comp.str" %in% names(arglist)) arglist$comp.str <- "|- "
+  out <- capture.output(rlang::inject(str(x, !!!arglist)))
+  cat(
+    stringr::str_replace_all(out, "(?<= ):", " = ") %!>%
+      stringr::str_replace_all(":(?= )", " = ") %!>%
+      stringr::str_replace_all("(List of )(\\d*)", " lst [\\2]") %!>%
+      stringr::str_replace_all("\\$", " -") %!>%
+      stringr::str_replace_all("(?<!\\.)\\.\\.(?!\\.)", ".") %!>%
+      stringr::str_replace_all("- attr\\(\\*, \"(.*)\"\\)=", " attr: \\1 "),
+    sep = "\n"
+  )
+}
