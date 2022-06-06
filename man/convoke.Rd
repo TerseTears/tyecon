@@ -13,8 +13,10 @@ convoke(argslist, ...)
 transformations.}
 }
 \value{
-Function with additional class \emph{convoke} with arguments being\preformatted{convoke_func(specified_args, interface, ..., evaluate = TRUE)
-}
+Function with additional class \emph{convoke} with arguments being
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{convoke_func(specified_args, interface, ..., evaluate = TRUE)
+}\if{html}{\out{</div>}}
 
 The \code{evaluate} argument is useful for debugging purposes. Extra arguments can
 be passed in the format \code{interface.arg}.
@@ -28,14 +30,18 @@ changing the respective argument in the generated function.
 \section{Unifying Functions}{
 \subsection{Specifying the unifying interface}{
 
-The unifying interface needs to be specified as arglist for the new function\preformatted{list(arg1 = default1, arg2 = default2, etc.)
-}
+The unifying interface needs to be specified as arglist for the new function
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{list(arg1 = default1, arg2 = default2, etc.)
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Specifying function argument transformations}{
 
-Transformations follows the function specification format\preformatted{func1(func1arg1 = transformed_arg1, func1arg2 = transformed_arg2)
-}
+Transformations follows the function specification format
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{func1(func1arg1 = transformed_arg1, func1arg2 = transformed_arg2)
+}\if{html}{\out{</div>}}
 
 Essentially, pass the function as if it is to take
 arguments from the unified function.
@@ -44,8 +50,10 @@ arguments from the unified function.
 
 \section{Composing functions}{
 It is also possible to progressively add functions to a convoke function
-simply by adding to the convoke function the new specifications:\preformatted{convoke_func + ~func_spec
-}
+simply by adding to the convoke function the new specifications:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{convoke_func + ~func_spec
+}\if{html}{\out{</div>}}
 }
 
 \examples{

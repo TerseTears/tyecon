@@ -34,8 +34,8 @@ operator does.
 }
 
 \section{Usage of the \emph{convey} Operator}{
-\preformatted{object \%->\% code
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{object \%->\% code
+}\if{html}{\out{</div>}}
 
 The object part can be any single object or the result of previous piping
 operations. The instructions are exactly as if each command was sequentially

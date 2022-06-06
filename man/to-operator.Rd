@@ -23,11 +23,13 @@ the results to be returned in a single dataframe.
 The syntax to use for this purpose is to have the object on the LHS of the
 \verb{\%to\%} operator, and wrap all instructions in a braces pair that effectively
 acts as multiple lines of regular R code. However, each line needs to be
-named, in a formula syntax fashion:\preformatted{obj \%to\% \{
+named, in a formula syntax fashion:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{obj \%to\% \{
  inst1 ~ inst1expressions(.)
  inst2 ~ inst2expressions(.)
 \}
-}
+}\if{html}{\out{</div>}}
 
 The right side of the formula is to be specified similar to how instructions
 in \code{purrr:map} are, that is, by the \code{.}, \code{.x} syntax.
