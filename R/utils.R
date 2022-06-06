@@ -153,3 +153,36 @@ str_pretty <- function(x, ...) {
     sep = "\n"
   )
 }
+
+#' Deconstruct data into multiple values
+#'
+#' `consign` pipe allows destructing data into multiple variables at once.
+#' Internally `rlang::set_names` is used to name the RHS elements to current
+#' scope.
+#'
+#' @family result assemblers
+#'
+#' @param vars \[R names\] Valid R names separated by colon.
+#' @param data \[object\] R object of the same length as the number of `vars`
+#' names.
+#'
+#' @return Nothing. Assigns LHS names to current scope.
+#'
+#' @rdname consign
+#' @examples
+#' val1 : val_2 : someval %<-% c(2, 4, 9)
+#' c(val1, val_2, someval)
+#'
+#' x:y:z %<-% list(c(4,5,12), TRUE, list(a=5,b=9))
+#' x; y; z
+#'
+#' @export
+`%<-%` <- function(vars, data){
+  vars <- rlang::enexpr(vars)
+  vars <- stringr::str_trim(
+    stringr::str_split(rlang::expr_text(vars), "\\:")[[1]])
+  if(!all(make.names(vars) == vars)) {
+    rlang::abort("Nonvalid names in %<-% assignment")
+  }
+  rlang::env_bind(rlang::caller_env(), !!!rlang::set_names(data, vars))
+}

@@ -70,6 +70,7 @@ testvec \%to\% {
 Other result assemblers: 
 \code{\link{\%$>\%}()},
 \code{\link{\%->\%}()},
+\code{\link{\%<-\%}()},
 \code{\link{conserve}()}
 }
 \concept{result assemblers}

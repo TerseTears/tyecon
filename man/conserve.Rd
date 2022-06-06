@@ -42,6 +42,7 @@ original object.
 Other result assemblers: 
 \code{\link{\%$>\%}()},
 \code{\link{\%->\%}()},
+\code{\link{\%<-\%}()},
 \code{\link{\%to\%}()}
 }
 \concept{result assemblers}

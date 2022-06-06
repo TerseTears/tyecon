@@ -84,6 +84,7 @@ all.equal(mydf$x2xyval, mydf$x2xy)
 \seealso{
 Other result assemblers: 
 \code{\link{\%$>\%}()},
+\code{\link{\%<-\%}()},
 \code{\link{\%to\%}()},
 \code{\link{conserve}()}
 }
