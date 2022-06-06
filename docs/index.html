@@ -80,28 +80,15 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.svg" class="logo" alt=""><h1 id="tyecon-">tyecon
-<a class="anchor" aria-label="anchor" href="#tyecon-"></a>
+<img src="logo.svg" class="logo" alt=""><h1 id="tyecon-">tyecon <a class="anchor" aria-label="anchor" href="#tyecon-"></a>
 </h1>
 </div>
-<p>A package to make assembling functions and results easier and
-quicker.</p>
+<p>A package to make assembling functions and results easier and quicker.</p>
 <div class="section level2">
 <h2 id="main-idea">Main Idea<a class="anchor" aria-label="anchor" href="#main-idea"></a>
 </h2>
-<p>The <code>tyecon</code> package is a set of macros to allow conciser
-code for using functions and objects from different packages
-together.</p>
-<p>There are essentially two existing approaches to dealing with
-differences in package interfaces: 1. Employing a sort of
-object-oriented approach with the use of generic functions and 2.
-Writing meta packages that unify the interfaces. The <code>tyecon</code>
-package proposes a data/code alternative: Utilizing meta functions with
-a simple DSL so that the user can take care of such tasks on their own.
-This allows greater flexibility yet avoids the disparity that comes with
-the differing shapes of package models, plots, etc. while also
-eliminating the need for meta-packages (or simplifying writing
-them).</p>
+<p>The <code>tyecon</code> package is a set of macros to allow conciser code for using functions and objects from different packages together.</p>
+<p>There are essentially two existing approaches to dealing with differences in package interfaces: 1. Employing a sort of object-oriented approach with the use of generic functions and 2. Writing meta packages that unify the interfaces. The <code>tyecon</code> package proposes a data/code alternative: Utilizing meta functions with a simple DSL so that the user can take care of such tasks on their own. This allows greater flexibility yet avoids the disparity that comes with the differing shapes of package models, plots, etc. while also eliminating the need for meta-packages (or simplifying writing them).</p>
 </div>
 <div class="section level2">
 <h2 id="the-macros">The Macros<a class="anchor" aria-label="anchor" href="#the-macros"></a>
@@ -111,9 +98,7 @@ them).</p>
 <code>convoke</code><a class="anchor" aria-label="anchor" href="#convoke"></a>
 </h3>
 <p>Unifies function interfaces.</p>
-<p>Consider two functions with swapped arguments that we would want to
-use together without extra hassle. Then we would want to be able to
-simply change the “interface” with a single argument:</p>
+<p>Consider two functions with swapped arguments that we would want to use together without extra hassle. Then we would want to be able to simply change the “interface” with a single argument:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">foo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">a1</span>, <span class="va">b1</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">a1</span> <span class="op">/</span> <span class="va">b1</span>
@@ -140,10 +125,7 @@ simply change the “interface” with a single argument:</p>
 <code>conflate</code><a class="anchor" aria-label="anchor" href="#conflate"></a>
 </h3>
 <p>Unifies generic function interfaces.</p>
-<p>Another issue is when one tries to use dissimilar generic methods
-together, yet each method comes with peripheral arguments. The
-<code>conflate</code> function allows one to supply all such arguments
-together:</p>
+<p>Another issue is when one tries to use dissimilar generic methods together, yet each method comes with peripheral arguments. The <code>conflate</code> function allows one to supply all such arguments together:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">lm_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
 <span class="va">glm_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>
@@ -160,10 +142,7 @@ together:</p>
 <code>%-&gt;%</code> convey operator<a class="anchor" aria-label="anchor" href="#--convey-operator"></a>
 </h3>
 <p>Passes data created at each step to the next function.</p>
-<p>Transforming data can require passing it consecutively to multiple
-functions. Nevertheless, some intermediate results may need to be kept
-for later stages. This is a single context and thus requires its own
-macro:</p>
+<p>Transforming data can require passing it consecutively to multiple functions. Nevertheless, some intermediate results may need to be kept for later stages. This is a single context and thus requires its own macro:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span>
   <span class="op">~</span><span class="va">x</span>, <span class="op">~</span><span class="va">y</span>,
@@ -182,10 +161,10 @@ macro:</p>
 <span class="op">}</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="-construct-operator">%$&gt;% construct operator<a class="anchor" aria-label="anchor" href="#-construct-operator"></a>
+<h3 id="-construct-operator">
+<code>%$&gt;%</code> construct operator<a class="anchor" aria-label="anchor" href="#-construct-operator"></a>
 </h3>
-<p>This pipe facilitates transforming data into a new structure with
-concise syntax while also enforcing a “bottom-up” approach:</p>
+<p>This pipe facilitates transforming data into a new structure with concise syntax while also enforcing a “bottom-up” approach:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span>
   <span class="op">~</span><span class="va">x</span>, <span class="op">~</span><span class="va">y</span>,
@@ -203,36 +182,35 @@ concise syntax while also enforcing a “bottom-up” approach:</p>
 <span class="op">}</span></code></pre></div>
 </div>
 <div class="section level3">
+<h3 id="--consign-operator">
+<code>%&lt;-%</code> consign operator<a class="anchor" aria-label="anchor" href="#--consign-operator"></a>
+</h3>
+<p>R does not support destructing data natively. The consign operator offers that possibility. Simply separating the variable names to be assigned by a colon:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">x</span> <span class="op">:</span> <span class="va">y</span> <span class="op">:</span> <span class="va">z</span> <span class="op"><a href="reference/consign.html">%&lt;-%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span>,<span class="fl">12</span><span class="op">)</span>, <span class="fl">7</span>, <span class="st">"hello"</span><span class="op">)</span>
+<span class="va">x</span>; <span class="va">y</span>; <span class="va">z</span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="other-macros-to-come">Other macros to come<a class="anchor" aria-label="anchor" href="#other-macros-to-come"></a>
 </h3>
-<p>I’m experimenting with my R workflow trying to optimize the process
-of mingling different parts as concisely and thus more macros are to
-come. If you have any suggestions please do open an issue.</p>
+<p>I’m experimenting with my R workflow trying to optimize the process of mingling different parts as concisely and thus more macros are to come. If you have any suggestions please do open an issue.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>The package still has a long way to go. If you want to try it for
-yourself, here is the instruction:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>The package still has a long way to go. If you want to try it for yourself, here is the instruction:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Install remotes package if not installed.</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
 <span class="co"># Install tyecon using the remotes package.</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"TerseTears/tyecon"</span><span class="op">)</span></code></pre></div>
-<p>To uninstall the package, run the usual <code>remove.packages</code>
-command.</p>
+<p>To uninstall the package, run the usual <code>remove.packages</code> command.</p>
 </div>
 <div class="section level2">
 <h2 id="name">Name<a class="anchor" aria-label="anchor" href="#name"></a>
 </h2>
-<p>The idea of the package was originally to straighten out tasks common
-to econometrics, hence “<strong>t</strong>id<strong>y</strong>
-<strong>econ</strong>ometrics”” (other abbreviations didn’t look as
-good). Still, I realized early on that the problems where common with
-general data analysis tasks, yet the name remained. Now, it can be
-considered “tidy <em>con</em>” functions, functions that simplify joint
-operations with conciser statements.</p>
+<p>The idea of the package was originally to straighten out tasks common to econometrics, hence “<strong>t</strong>id<strong>y</strong> <strong>econ</strong>ometrics”” (other abbreviations didn’t look as good). Still, I realized early on that the problems where common with general data analysis tasks, yet the name remained. Now, it can be considered “tidy <em>con</em>” functions, functions that simplify joint operations with conciser statements.</p>
 </div>
 <div class="section level2">
 <h2 id="pending-tasks">Pending Tasks<a class="anchor" aria-label="anchor" href="#pending-tasks"></a>
@@ -243,15 +221,17 @@ operations with conciser statements.</p>
 Better error handling</li>
 <li>
 <input type="checkbox" disabled>
-Writing a vignette explaining possible uses in package developemnt</li>
+Writing a vignette explaining possible uses in package development</li>
 <li>
 <input type="checkbox" disabled>
 Writing tests for <code>conflate</code>
 </li>
 <li>
 <input type="checkbox" disabled>
-(QoL) allowing supplying custom arguments with <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>,
-e.g. <code>stan_glm   = c(chains=5, iter=500)</code>.</li>
+(QoL) allowing supplying custom arguments with <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>, e.g. <code>stan_glm   = c(chains=5, iter=500)</code>.</li>
+<li>
+<input type="checkbox" disabled>
+Add assignment of multiple elements to <code>construct</code> at once (using map for instance).</li>
 </ul>
 </div>
 <div class="section level2">
@@ -304,8 +284,7 @@ e.g. <code>stan_glm   = c(chains=5, iter=500)</code>.</li>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
     </footer>

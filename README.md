@@ -94,7 +94,7 @@ df %->% {
 }
 ```
 
-### %$>% construct operator
+### `%$>%` construct operator
 
 This pipe facilitates transforming data into a new structure with concise 
 syntax while also enforcing a "bottom-up" approach:
@@ -115,6 +115,18 @@ df %$>% {
   minxy <- min(minx, miny)
 }
 ```
+
+### `%<-%` consign operator
+
+R does not support destructing data natively. The consign operator offers that
+possibility. Simply separating the variable names to be assigned by a colon:
+
+```r
+x : y : z %<-% list(c(9,12), 7, "hello")
+x; y; z
+```
+
+
 ### Other macros to come
 
 I'm experimenting with my R workflow trying to optimize the process of mingling
@@ -146,11 +158,13 @@ statements.
 
 ## Pending Tasks
 
-* [ ] Better error handling
-* [ ] Writing a vignette explaining possible uses in package developemnt
-* [ ] Writing tests for `conflate`
-* [ ] (QoL) allowing supplying custom arguments with `c()`, e.g. `stan_glm
+- [ ] Better error handling
+- [ ] Writing a vignette explaining possible uses in package development
+- [ ] Writing tests for `conflate`
+- [ ] (QoL) allowing supplying custom arguments with `c()`, e.g. `stan_glm
   = c(chains=5, iter=500)`.
+- [ ] Add assignment of multiple elements to `construct` at once (using map for
+  instance).
 
 ## License
 

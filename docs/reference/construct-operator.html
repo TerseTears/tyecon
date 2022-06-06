@@ -93,6 +93,7 @@ wrapped in curly braces to encapsualte the context of the pipe.</p></dd>
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other result assemblers: 
 <code>%-&gt;%()</code>,
+<code>%&lt;-%()</code>,
 <code><a href="to-operator.html">%to%</a>()</code>,
 <code><a href="conserve.html">conserve</a>()</code></p></div>
     </div>
@@ -157,18 +158,23 @@ wrapped in curly braces to encapsualte the context of the pipe.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># Unnamed instructions can only be accessed by position</span></span>
-<span class="r-in"><span class="va">val</span> <span class="op">&lt;-</span> <span class="va">testdf</span> <span class="op">%$&gt;%</span> <span class="op">{</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># Result of unnamed instructions are used as is</span></span>
+<span class="r-in"><span class="va">testdf</span> <span class="op">%$&gt;%</span> <span class="op">{</span></span>
 <span class="r-in">  <span class="va">xval</span> <span class="op">&lt;-</span> <span class="va">x</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>minx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, miny <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>, <span class="fl">12</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
-<span class="r-in"><span class="va">val</span><span class="op">$</span><span class="va">xval</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $xval</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  3  5 12</span>
-<span class="r-in"><span class="va">val</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $minx</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
-<span class="r-in"><span class="va">val</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $miny</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -180,8 +186,7 @@ wrapped in curly braces to encapsualte the context of the pipe.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
     </footer></div>

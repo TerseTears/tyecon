@@ -9,7 +9,11 @@ reference:
   - contents:
       - has_concept("function assemblers")
   - title: Assemble Results
-    desc: Functions that ease combining of function results
+    desc: Functions that ease combining results
   - contents:
       - has_concept("result assemblers")
+  - title: Other
+    desc: Miscellaneous tools
+  - contents:
+      - lacks_concepts(c("result assemblers", "function assemblers"))
 ---
