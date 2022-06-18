@@ -1,3 +1,7 @@
+# tyecon 0.2.4
+
+* Add `control` function 
+
 # tyecon 0.2.3
 
 * Add `construct` pipe
