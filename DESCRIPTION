@@ -19,20 +19,25 @@ RoxygenNote: 7.2.0
 Suggests: 
     broom,
     broom.mixed,
+    earth,
+    elasticnet,
     dplyr,
     glmnet,
     knitr,
     rmarkdown,
+    rsample,
     rstanarm,
     testthat (>= 3.0.0),
-    tibble,
-    tidymodels
+    tidymodels,
+    yardstick
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Depends:
     R (>= 4.1.0)
 Imports: 
-    stringr,
+    magrittr,
     purrr,
     rlang,
-    magrittr
+    stringr,
+    tibble,
+    tidyr
