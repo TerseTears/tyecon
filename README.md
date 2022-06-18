@@ -126,6 +126,34 @@ x : y : z %<-% list(c(9,12), 7, "hello")
 x; y; z
 ```
 
+### `control`
+
+Evaluate code over multiple values.
+
+The main loop of the package is the `control` function. It allows building
+a tree over which an expression is to be evaluated. One simply defines the
+evaluation hierarchy and any intermediate actions to be taken:
+
+```r
+control(
+  {
+    model <- earth::earth(
+      Sepal.Length ~ ., rsample::analysis(fold$splits), degree = degree)
+    holdout <- rsample::assessment(fold$splits)
+    holdout$.fit <- predict(model, holdout, "response")[, 1]
+    rmse_value <- yardstick::rmse(holdout, Sepal.Length, .fit)
+    list(model = model, rmse = rmse_value)
+  },
+  fold = purrr::transpose(rsample::vfold_cv(iris, 5)) ~ 1,
+  degree = 1:5 ~ 2,
+  unnest_value = TRUE,
+  .selector = ~ dplyr::group_by(., degree) %>%
+    dplyr::summarise(
+      model = list(dplyr::first(model)),
+      rmse = mean(rmse$.estimate)
+    )
+)
+```
 
 ### Other macros to come
 

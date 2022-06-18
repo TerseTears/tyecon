@@ -86,6 +86,7 @@ Other result assemblers:
 \code{\link{\%$>\%}()},
 \code{\link{\%<-\%}()},
 \code{\link{\%to\%}()},
-\code{\link{conserve}()}
+\code{\link{conserve}()},
+\code{\link{control}()}
 }
 \concept{result assemblers}
