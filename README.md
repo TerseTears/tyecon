@@ -191,8 +191,10 @@ statements.
 - [ ] Writing tests for `conflate`
 - [ ] (QoL) allowing supplying custom arguments with `c()`, e.g. `stan_glm
   = c(chains=5, iter=500)`.
-- [ ] Add assignment of multiple elements to `construct` at once (using map for
+- [x] Add assignment of multiple elements to `construct` at once (using map for
   instance).
+- [ ] Use the `:` syntax for multiple args including the `(a=aname):(b=bname)`
+  syntax.
 
 ## License
 
