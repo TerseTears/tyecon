@@ -10,8 +10,8 @@ control(
   .refiner = identity,
   .prober,
   .selector = identity,
-  unnest_value = FALSE,
-  unnest_summary = FALSE
+  .unnest_value = FALSE,
+  .unnest_summary = FALSE
 )
 }
 \arguments{
@@ -30,10 +30,10 @@ of evaluating \code{code}. Takes the list of such values as input.}
 what's needed from it. Takes the refined, evaluated, probed \code{tibble} as
 input.}
 
-\item{unnest_value}{[\code{boolean}] Whether to unnest the results inside the
+\item{.unnest_value}{[\code{boolean}] Whether to unnest the results inside the
 \code{tibble}.}
 
-\item{unnest_summary}{[\code{boolean}] Whether to unnest the results from
+\item{.unnest_summary}{[\code{boolean}] Whether to unnest the results from
 \code{.prober} inside the \code{tibble}.}
 }
 \value{
@@ -82,7 +82,7 @@ control(
     list(model = model, rmse = rmse_value)
   },
   fold = purrr::transpose(rsample::vfold_cv(iris, 5)),
-  unnest_value = TRUE
+  .unnest_value = TRUE
 )
 
 # Use multiple levels with the formula syntax
@@ -97,7 +97,7 @@ control(
   },
   fold = purrr::transpose(rsample::vfold_cv(iris, 3)) ~ 1,
   degree = 1:5 ~ 2,
-  unnest_value = TRUE,
+  .unnest_value = TRUE,
   .selector = ~ dplyr::group_by(., degree) \%>\%
     dplyr::summarise(
       model = list(dplyr::first(model)),
@@ -126,7 +126,7 @@ control(
   },
   fold = purrr::transpose(rsample::vfold_cv(iris, 5)) ~ 1,
   lambda = seq(0, 0.1, 0.01) ~ 2,
-  unnest_value = TRUE,
+  .unnest_value = TRUE,
   .selector = ~ dplyr::group_by(., lambda) \%>\%
     dplyr::summarise(
       model = list(dplyr::first(model)),

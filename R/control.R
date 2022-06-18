@@ -16,9 +16,9 @@
 #' @param .selector \[`function`\] Modifying the final `tibble` or extracting
 #' what's needed from it. Takes the refined, evaluated, probed `tibble` as
 #' input.
-#' @param unnest_value \[`boolean`\] Whether to unnest the results inside the
+#' @param .unnest_value \[`boolean`\] Whether to unnest the results inside the
 #' `tibble`.
-#' @param unnest_summary \[`boolean`\] Whether to unnest the results from
+#' @param .unnest_summary \[`boolean`\] Whether to unnest the results from
 #' `.prober` inside the `tibble`.
 #'
 #' @return A `tibble` with information on the evaluation `tree`, and the
@@ -27,7 +27,7 @@
 #' @export
 control <- function(code, ...,
                     .refiner = identity, .prober, .selector = identity,
-                    unnest_value = FALSE, unnest_summary = FALSE) {
+                    .unnest_value = FALSE, .unnest_summary = FALSE) {
   # TODO Needs to be enquo0 to allow !! inside "code"
   code <- rlang::enquo0(code)
   code_env <- rlang::quo_get_env(code)
@@ -48,7 +48,7 @@ control <- function(code, ...,
   if (all(purrr::map_int(values_df$.value, length) == 1)) {
     values_df$.value <- unlist(values_df$.value)
   }
-  if (unnest_value) {
+  if (.unnest_value) {
     values_df <- tidyr::unnest_wider(values_df, .value, strict = TRUE)
   }
 
@@ -61,7 +61,7 @@ control <- function(code, ...,
       values_df$.summary <- unlist(values_df$.summary)
   }
   }
-  if (unnest_summary) {
+  if (.unnest_summary) {
     values_df <- tidyr::unnest_wider(values_df, .summary, strict = TRUE)
   }
 

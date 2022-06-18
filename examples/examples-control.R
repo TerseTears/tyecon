@@ -35,7 +35,7 @@ control(
     list(model = model, rmse = rmse_value)
   },
   fold = purrr::transpose(rsample::vfold_cv(iris, 5)),
-  unnest_value = TRUE
+  .unnest_value = TRUE
 )
 
 # Use multiple levels with the formula syntax
@@ -50,7 +50,7 @@ control(
   },
   fold = purrr::transpose(rsample::vfold_cv(iris, 3)) ~ 1,
   degree = 1:5 ~ 2,
-  unnest_value = TRUE,
+  .unnest_value = TRUE,
   .selector = ~ dplyr::group_by(., degree) %>%
     dplyr::summarise(
       model = list(dplyr::first(model)),
@@ -79,7 +79,7 @@ control(
   },
   fold = purrr::transpose(rsample::vfold_cv(iris, 5)) ~ 1,
   lambda = seq(0, 0.1, 0.01) ~ 2,
-  unnest_value = TRUE,
+  .unnest_value = TRUE,
   .selector = ~ dplyr::group_by(., lambda) %>%
     dplyr::summarise(
       model = list(dplyr::first(model)),

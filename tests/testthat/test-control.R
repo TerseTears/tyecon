@@ -77,7 +77,7 @@ test_that("unnesting value works", {
       list(val = val_vec, val2 = val_vec * 2)
     },
     val_vec = 1:5,
-    unnest_value = TRUE
+    .unnest_value = TRUE
   ), tibble::tibble(val_vec = 1:5, val = 1:5, val2 = (1:5) * 2))
 })
 
@@ -88,7 +88,7 @@ test_that("unnesting summary works", {
     },
     val_vec = 1:5,
     .prober = ~ list(g4 = . > 4, l4 = . < 4),
-    unnest_summary = TRUE
+    .unnest_summary = TRUE
   ), tibble::tibble(
     val_vec = 1:5, .value = (1:5) * 2, g4 = c(FALSE, FALSE, TRUE, TRUE, TRUE),
     l4 = c(TRUE, FALSE, FALSE, FALSE, FALSE)
