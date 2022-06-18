@@ -11,14 +11,14 @@
 #'
 #' The unifying interface needs to be specified as arglist for the new function
 #'
-#' ```
+#' ```r
 #' list(arg1 = default1, arg2 = default2, etc.)
 #' ```
 #'
 #' ## Specifying function argument transformations
 #'
 #' Transformations follows the function specification format
-#' ```
+#' ```r
 #' func1(func1arg1 = transformed_arg1, func1arg2 = transformed_arg2)
 #' ```
 #' Essentially, pass the function as if it is to take
@@ -28,7 +28,7 @@
 #'
 #' It is also possible to progressively add functions to a convoke function
 #' simply by adding to the convoke function the new specifications:
-#' ```
+#' ```r
 #' convoke_func + ~func_spec
 #' ```
 #'
@@ -41,7 +41,7 @@
 #' transformations.
 #'
 #' @return Function with additional class *convoke* with arguments being
-#' ```
+#' ```r
 #' convoke_func(specified_args, interface, ..., evaluate = TRUE)
 #' ```
 #' The `evaluate` argument is useful for debugging purposes. Extra arguments can

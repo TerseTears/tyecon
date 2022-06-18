@@ -17,7 +17,7 @@
 #'
 #' # Usage of the *convey* Operator
 #'
-#' ```
+#' ```r
 #' object %->% code
 #' ```
 #'

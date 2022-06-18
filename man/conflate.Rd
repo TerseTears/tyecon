@@ -13,7 +13,7 @@ shared between all methods to be combined.}
 \value{
 Function with additional class \emph{conflate} with arguments being
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{conflate_func(generic_spec_args, ..., evaluate = TRUE)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{conflate_func(generic_spec_args, ..., evaluate = TRUE)
 }\if{html}{\out{</div>}}
 
 Where \code{...} specifies additional arguments to be supplied in the form

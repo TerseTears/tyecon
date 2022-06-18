@@ -21,7 +21,7 @@
 #'
 #' @return Function with additional class *conflate* with arguments being
 #'
-#' ```
+#' ```r
 #' conflate_func(generic_spec_args, ..., evaluate = TRUE)
 #' ```
 #' Where `...` specifies additional arguments to be supplied in the form

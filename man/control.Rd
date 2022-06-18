@@ -45,6 +45,7 @@ columns \code{.value}, and \code{.summary} if probed and not unnested.
 returning all results in a \code{tibble}.
 }
 \examples{
+set.seed(123)
 # Use control to apply multiple arguments to the same expression
 control(
   {
@@ -94,7 +95,7 @@ control(
     rmse_value <- yardstick::rmse(holdout, Sepal.Length, .fit)
     list(model = model, rmse = rmse_value)
   },
-  fold = purrr::transpose(rsample::vfold_cv(iris, 5)) ~ 1,
+  fold = purrr::transpose(rsample::vfold_cv(iris, 3)) ~ 1,
   degree = 1:5 ~ 2,
   unnest_value = TRUE,
   .selector = ~ dplyr::group_by(., degree) \%>\%

@@ -62,7 +62,7 @@ pretty_func_args <- function(func, extra_args = NULL) {
 #' `%to%` operator, and wrap all instructions in a braces pair that effectively
 #' acts as multiple lines of regular R code. However, each line needs to be
 #' named, in a formula syntax fashion:
-#' ```
+#' ```r
 #' obj %to% {
 #'  inst1 ~ inst1expressions(.)
 #'  inst2 ~ inst2expressions(.)

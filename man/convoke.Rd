@@ -15,7 +15,7 @@ transformations.}
 \value{
 Function with additional class \emph{convoke} with arguments being
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{convoke_func(specified_args, interface, ..., evaluate = TRUE)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{convoke_func(specified_args, interface, ..., evaluate = TRUE)
 }\if{html}{\out{</div>}}
 
 The \code{evaluate} argument is useful for debugging purposes. Extra arguments can
@@ -32,7 +32,7 @@ changing the respective argument in the generated function.
 
 The unifying interface needs to be specified as arglist for the new function
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{list(arg1 = default1, arg2 = default2, etc.)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{list(arg1 = default1, arg2 = default2, etc.)
 }\if{html}{\out{</div>}}
 }
 
@@ -40,7 +40,7 @@ The unifying interface needs to be specified as arglist for the new function
 
 Transformations follows the function specification format
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{func1(func1arg1 = transformed_arg1, func1arg2 = transformed_arg2)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{func1(func1arg1 = transformed_arg1, func1arg2 = transformed_arg2)
 }\if{html}{\out{</div>}}
 
 Essentially, pass the function as if it is to take
@@ -52,7 +52,7 @@ arguments from the unified function.
 It is also possible to progressively add functions to a convoke function
 simply by adding to the convoke function the new specifications:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{convoke_func + ~func_spec
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{convoke_func + ~func_spec
 }\if{html}{\out{</div>}}
 }
 

@@ -25,7 +25,7 @@ The syntax to use for this purpose is to have the object on the LHS of the
 acts as multiple lines of regular R code. However, each line needs to be
 named, in a formula syntax fashion:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{obj \%to\% \{
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{obj \%to\% \{
  inst1 ~ inst1expressions(.)
  inst2 ~ inst2expressions(.)
 \}
